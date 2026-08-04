@@ -160,14 +160,22 @@ function ReportIssue() {
             <option value="Other">Other</option>
           </select>
 
-          <label className="upload-label">
-            <span>Upload image (JPG, JPEG, PNG · max 5 MB)</span>
-            <input
-              type="file"
-              accept=".jpg,.jpeg,.png,image/jpeg,image/png"
-              onChange={handleImageChange}
-            />
-          </label>
+          <div className="upload-area">
+            <label className="upload-trigger">
+              <span className="upload-icon">📎</span>
+              <span className="upload-text">Choose Image</span>
+              <input
+                type="file"
+                accept=".jpg,.jpeg,.png,image/jpeg,image/png"
+                onChange={handleImageChange}
+                hidden
+              />
+            </label>
+            <span className="upload-hint">JPG, JPEG, PNG · max 5 MB</span>
+            <span className="upload-filename">
+              {selectedImage ? selectedImage.name : "No image selected"}
+            </span>
+          </div>
 
           {previewUrl && (
             <div className="image-preview-box">

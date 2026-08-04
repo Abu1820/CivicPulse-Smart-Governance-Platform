@@ -43,7 +43,9 @@ function Navbar() {
           </>
         ) : (
           <>
-            <Link to="/report">Report Issue</Link>
+            {user?.role !== "ADMIN" && (
+              <Link to="/report">Report Issue</Link>
+            )}
 
             <Link to="/issues">View Issues</Link>
 
@@ -52,6 +54,13 @@ function Navbar() {
                 Dashboard
               </Link>
             )}
+
+            <span className="nav-user-info">
+              <span className="nav-user-icon">
+                {user?.role === "ADMIN" ? "🛡️" : "👤"}
+              </span>
+              <span className="nav-user-name">{user?.name}</span>
+            </span>
 
             <button
               className="logout-btn"

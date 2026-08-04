@@ -44,6 +44,27 @@ nav a:hover {
     color: #14B8A6;
 }
 
+/* Inline User Info */
+
+.nav-user-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #CBD5E1;
+    font-size: 15px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.nav-user-icon {
+    font-size: 16px;
+    line-height: 1;
+}
+
+.nav-user-name {
+    color: #F1F5F9;
+}
+
 /* Logout Button */
 
 .logout-btn {

@@ -18,53 +18,55 @@ function App() {
         <>
             <Navbar />
 
-            <Routes>
+            <main className="main-content-wrapper">
+                <Routes>
 
-                <Route path="/" element={<Home />} />
+                    <Route path="/" element={<Home />} />
 
-                <Route path="/login" element={<Login />} />
+                    <Route path="/login" element={<Login />} />
 
-                <Route path="/register" element={<Register />} />
+                    <Route path="/register" element={<Register />} />
 
-                <Route
-                    path="/report"
-                    element={
-                        <ProtectedRoute>
-                            <ReportIssue />
-                        </ProtectedRoute>
-                    }
-                />
+                    <Route
+                        path="/report"
+                        element={
+                            <ProtectedRoute>
+                                <ReportIssue />
+                            </ProtectedRoute>
+                        }
+                    />
 
-                <Route
-                    path="/issues"
-                    element={
-                        <ProtectedRoute>
-                            <ViewIssues />
-                        </ProtectedRoute>
-                    }
-                />
+                    <Route
+                        path="/issues"
+                        element={
+                            <ProtectedRoute>
+                                <ViewIssues />
+                            </ProtectedRoute>
+                        }
+                    />
 
-                <Route
-                    path="/issues/:id"
-                    element={
-                        <ProtectedRoute>
-                            <IssueDetails />
-                        </ProtectedRoute>
-                    }
-                />
+                    <Route
+                        path="/issues/:id"
+                        element={
+                            <ProtectedRoute>
+                                <IssueDetails />
+                            </ProtectedRoute>
+                        }
+                    />
 
-                <Route
-                    path="/admin-dashboard"
-                    element={
-                        <ProtectedRoute role="ADMIN">
-                            <AdminDashboard />
-                        </ProtectedRoute>
-                    }
-                />
+                    <Route
+                        path="/admin-dashboard"
+                        element={
+                            <ProtectedRoute role="ADMIN">
+                                <AdminDashboard />
+                            </ProtectedRoute>
+                        }
+                    />
 
-                <Route path="*" element={<NotFound />} />
+                    <Route path="*" element={<NotFound />} />
 
-            </Routes>
+                </Routes>
+            </main>
 
             <ToastContainer
                 position="top-right"
