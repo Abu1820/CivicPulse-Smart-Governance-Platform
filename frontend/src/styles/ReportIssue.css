@@ -74,6 +74,42 @@
         transform: scale(0.98);
     }
 
+    .report-card button:disabled {
+        cursor: not-allowed;
+        opacity: 0.7;
+        transform: none;
+    }
+
+    .upload-label {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-size: 14px;
+        color: #334155;
+    }
+
+    .upload-label input {
+        padding: 0;
+        border: none;
+        border-radius: 0;
+    }
+
+    .image-preview-box {
+        border: 1px dashed #14B8A6;
+        border-radius: 10px;
+        padding: 8px;
+        background: #F8FAFC;
+        display: flex;
+        justify-content: center;
+    }
+
+    .image-preview-box img {
+        width: 100%;
+        max-height: 220px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
     @media (max-width: 500px) {
         .report-card {
             width: 100%;

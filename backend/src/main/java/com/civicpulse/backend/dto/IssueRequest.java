@@ -6,6 +6,7 @@ public class IssueRequest {
     private String description;
     private String location;
     private String category;
+    private String imagePath;
 
     public IssueRequest() {
     }
@@ -47,5 +48,13 @@ public class IssueRequest {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }

@@ -48,6 +48,30 @@
     color: #14B8A6;
 }
 
+.detail-image-wrapper {
+    margin: 24px 0;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #E2E8F0;
+    background: #F8FAFC;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+}
+
+.detail-image {
+    width: 100%;
+    max-height: 360px;
+    object-fit: cover;
+}
+
+.detail-image-placeholder {
+    color: #64748B;
+    font-size: 15px;
+    font-weight: 600;
+}
+
 .back-btn {
 
     width: 100%;

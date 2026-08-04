@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import api from "../api/axiosConfig";
 import "../styles/ReportIssue.css";
@@ -12,6 +12,18 @@ function ReportIssue() {
     category: "",
   });
 
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
+
   const handleChange = (e) => {
     setIssue({
       ...issue,
@@ -19,15 +31,60 @@ function ReportIssue() {
     });
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+
+    if (!file) {
+      setSelectedImage(null);
+      setPreviewUrl("");
+      return;
+    }
+
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Only JPG, JPEG, and PNG files are allowed.");
+      e.target.value = "";
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be 5 MB or smaller.");
+      e.target.value = "";
+      return;
+    }
+
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+
+    setSelectedImage(file);
+    setPreviewUrl(URL.createObjectURL(file));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
+    if (selectedImage && selectedImage.size > 5 * 1024 * 1024) {
+      toast.error("Image must be 5 MB or smaller.");
+      return;
+    }
 
-      const response = await api.post(
-        "/issues",
-        issue
-      );
+    setIsSubmitting(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("issue", JSON.stringify(issue));
+
+      if (selectedImage) {
+        formData.append("image", selectedImage);
+      }
+
+      const response = await api.post("/issues", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       console.log(response.data);
 
@@ -39,19 +96,18 @@ function ReportIssue() {
         location: "",
         category: "",
       });
-
+      setSelectedImage(null);
+      setPreviewUrl("");
     } catch (error) {
-
       console.error(error);
 
       if (error.response) {
-        toast.error(
-          error.response.data.message || "Failed to report issue"
-        );
+        toast.error(error.response.data.message || "Failed to report issue");
       } else {
         toast.error("Server not running or cannot connect");
       }
-
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -104,8 +160,23 @@ function ReportIssue() {
             <option value="Other">Other</option>
           </select>
 
-          <button type="submit">
-            Report Issue
+          <label className="upload-label">
+            <span>Upload image (JPG, JPEG, PNG · max 5 MB)</span>
+            <input
+              type="file"
+              accept=".jpg,.jpeg,.png,image/jpeg,image/png"
+              onChange={handleImageChange}
+            />
+          </label>
+
+          {previewUrl && (
+            <div className="image-preview-box">
+              <img src={previewUrl} alt="Issue preview" />
+            </div>
+          )}
+
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Submitting..." : "Report Issue"}
           </button>
 
         </form>

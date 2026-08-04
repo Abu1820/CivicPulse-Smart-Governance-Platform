@@ -299,6 +299,20 @@ function ViewIssues() {
                                     : "N/A"}
                             </p>
 
+                            <div className="issue-image-wrapper">
+                                {issue.imagePath ? (
+                                    <img
+                                        src={`http://localhost:8080${issue.imagePath}`}
+                                        alt={issue.title}
+                                        className="issue-image"
+                                    />
+                                ) : (
+                                    <div className="issue-image-placeholder">
+                                        No image available
+                                    </div>
+                                )}
+                            </div>
+
                             <div className="button-group">
 
                                 <button

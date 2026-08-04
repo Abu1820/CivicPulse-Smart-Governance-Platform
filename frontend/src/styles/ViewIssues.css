@@ -105,6 +105,30 @@
     color: #0D9488;
 }
 
+.issue-image-wrapper {
+    margin: 14px 0 16px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #E2E8F0;
+    background: #F8FAFC;
+    min-height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.issue-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.issue-image-placeholder {
+    color: #64748B;
+    font-size: 14px;
+    font-weight: 600;
+}
+
 /* Button Group */
 
 .button-group {

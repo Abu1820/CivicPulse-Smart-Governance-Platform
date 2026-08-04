@@ -1,13 +1,22 @@
 package com.civicpulse.backend.service;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.civicpulse.backend.dto.DashboardStats;
 import com.civicpulse.backend.dto.IssueRequest;
@@ -30,7 +39,21 @@ public class IssueService {
 
     // Create a new issue
     public Issue createIssue(IssueRequest request) {
-    	System.out.println(">>> createIssue() called");
+        Issue issue = new Issue();
+        User currentUser = getCurrentUser();
+
+        issue.setTitle(request.getTitle());
+        issue.setDescription(request.getDescription());
+        issue.setLocation(request.getLocation());
+        issue.setCategory(request.getCategory());
+        issue.setStatus("Pending");
+        issue.setUser(currentUser);
+
+        return issueRepository.save(issue);
+    }
+
+    public Issue createIssueWithImage(IssueRequest request, MultipartFile imageFile) {
+        validateImageFile(imageFile);
 
         Issue issue = new Issue();
         User currentUser = getCurrentUser();
@@ -41,6 +64,10 @@ public class IssueService {
         issue.setCategory(request.getCategory());
         issue.setStatus("Pending");
         issue.setUser(currentUser);
+
+        if (imageFile != null && !imageFile.isEmpty()) {
+            issue.setImagePath(storeImage(imageFile));
+        }
 
         return issueRepository.save(issue);
     }
@@ -132,6 +159,52 @@ public class IssueService {
                 inProgress,
                 resolved
         );
+    }
+
+    private void validateImageFile(MultipartFile imageFile) {
+        if (imageFile == null || imageFile.isEmpty()) {
+            return;
+        }
+
+        if (imageFile.getSize() > 5 * 1024 * 1024L) {
+            throw new RuntimeException("Image file must be 5 MB or smaller");
+        }
+
+        String contentType = imageFile.getContentType();
+        String extension = StringUtils.getFilenameExtension(imageFile.getOriginalFilename());
+
+        boolean isAllowedContentType = contentType != null && (contentType.equals("image/jpeg") || contentType.equals("image/png") || contentType.equals("image/jpg"));
+        boolean isAllowedExtension = extension != null && (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png"));
+
+        if (!isAllowedContentType && !isAllowedExtension) {
+            throw new RuntimeException("Only JPG, JPEG, and PNG files are allowed");
+        }
+    }
+
+    private String storeImage(MultipartFile imageFile) {
+        Path uploadDirectory = Paths.get("uploads").toAbsolutePath().normalize();
+
+        try {
+            Files.createDirectories(uploadDirectory);
+        } catch (IOException ex) {
+            throw new RuntimeException("Failed to create upload directory", ex);
+        }
+
+        String originalFileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
+        String fileName = UUID.randomUUID() + "_" + originalFileName;
+        Path targetPath = uploadDirectory.resolve(fileName).normalize();
+
+        if (!targetPath.startsWith(uploadDirectory)) {
+            throw new RuntimeException("Invalid image upload path");
+        }
+
+        try (InputStream inputStream = imageFile.getInputStream()) {
+            Files.copy(inputStream, targetPath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException ex) {
+            throw new RuntimeException("Failed to save uploaded image", ex);
+        }
+
+        return "/uploads/" + fileName;
     }
 
     private boolean matchesFilters(Issue issue, String search, String status, String category, String location, LocalDate filterDate) {

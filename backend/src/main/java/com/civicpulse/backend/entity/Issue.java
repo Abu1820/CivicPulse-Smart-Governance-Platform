@@ -32,6 +32,9 @@ public class Issue {
 	@Column(nullable = false, updatable = false)
 	private LocalDateTime createdDate;
 
+	@Column(name = "image_path")
+	private String imagePath;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
 	@JsonIgnore
@@ -91,6 +94,14 @@ public class Issue {
 
 	public LocalDateTime getCreatedDate() {
 		return createdDate;
+	}
+
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
 	}
 
 	public User getUser() {

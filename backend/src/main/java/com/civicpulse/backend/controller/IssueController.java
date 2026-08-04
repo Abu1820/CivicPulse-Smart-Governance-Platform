@@ -1,15 +1,18 @@
 package com.civicpulse.backend.controller;
 
+import java.io.IOException;
 import java.util.List;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.civicpulse.backend.dto.DashboardStats;
 import com.civicpulse.backend.dto.IssueRequest;
 import com.civicpulse.backend.entity.Issue;
 import com.civicpulse.backend.service.IssueService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/api/issues")
@@ -25,12 +28,20 @@ public class IssueController {
     // Create a new issue
     @PostMapping
     public ResponseEntity<Issue> createIssue(@RequestBody IssueRequest request) {
-
-        System.out.println("CREATE ISSUE CONTROLLER HIT");
-
         Issue issue = issueService.createIssue(request);
 
         return ResponseEntity.ok(issue);
+    }
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Issue> createIssueWithImage(
+            @RequestPart("issue") String issueJson,
+            @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        IssueRequest request = objectMapper.readValue(issueJson, IssueRequest.class);
+
+        return ResponseEntity.ok(issueService.createIssueWithImage(request, image));
     }
 
     // Get all issues with optional filters

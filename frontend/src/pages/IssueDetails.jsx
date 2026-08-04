@@ -82,6 +82,20 @@ function IssueDetails() {
                         : "N/A"}
                 </p>
 
+                <div className="detail-image-wrapper">
+                    {issue.imagePath ? (
+                        <img
+                            src={`http://localhost:8080${issue.imagePath}`}
+                            alt={issue.title}
+                            className="detail-image"
+                        />
+                    ) : (
+                        <div className="detail-image-placeholder">
+                            No image available
+                        </div>
+                    )}
+                </div>
+
                 <button
                     className="back-btn"
                     onClick={() => navigate("/issues")}
