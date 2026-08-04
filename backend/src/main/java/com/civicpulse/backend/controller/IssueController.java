@@ -39,9 +39,10 @@ public class IssueController {
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String status,
             @RequestParam(required = false) String category,
-            @RequestParam(required = false) String location) {
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String date) {
 
-        return ResponseEntity.ok(issueService.getAllIssues(search, status, category, location));
+        return ResponseEntity.ok(issueService.getAllIssues(search, status, category, location, date));
     }
 
     // Get issue by ID

@@ -26,13 +26,31 @@ function App() {
 
                 <Route path="/register" element={<Register />} />
 
-                <Route path="/report" element={<ReportIssue />} />
+                <Route
+                    path="/report"
+                    element={
+                        <ProtectedRoute>
+                            <ReportIssue />
+                        </ProtectedRoute>
+                    }
+                />
 
-                <Route path="/issues" element={<ViewIssues />} />
+                <Route
+                    path="/issues"
+                    element={
+                        <ProtectedRoute>
+                            <ViewIssues />
+                        </ProtectedRoute>
+                    }
+                />
 
                 <Route
                     path="/issues/:id"
-                    element={<IssueDetails />}
+                    element={
+                        <ProtectedRoute>
+                            <IssueDetails />
+                        </ProtectedRoute>
+                    }
                 />
 
                 <Route

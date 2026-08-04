@@ -1,5 +1,8 @@
 package com.civicpulse.backend.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import org.springframework.security.core.Authentication;
@@ -44,10 +47,14 @@ public class IssueService {
 
     // Get all issues
     public List<Issue> getAllIssues() {
-        return getAllIssues(null, null, null, null);
+        return getAllIssues(null, null, null, null, null);
     }
 
     public List<Issue> getAllIssues(String search, String status, String category, String location) {
+        return getAllIssues(search, status, category, location, null);
+    }
+
+    public List<Issue> getAllIssues(String search, String status, String category, String location, String date) {
         User currentUser = getCurrentUser();
         boolean isAdmin = currentUser.getRole() == Role.ADMIN;
 
@@ -59,6 +66,7 @@ public class IssueService {
         String normalizedStatus = status == null ? "" : status.trim();
         String normalizedCategory = category == null ? "" : category.trim();
         String normalizedLocation = location == null ? "" : location.trim();
+        LocalDate filterDate = parseDate(date);
 
         return issues.stream()
                 .filter(issue -> matchesFilters(
@@ -66,7 +74,8 @@ public class IssueService {
                         normalizedSearch,
                         normalizedStatus,
                         normalizedCategory,
-                        normalizedLocation))
+                        normalizedLocation,
+                        filterDate))
                 .toList();
     }
 
@@ -125,7 +134,7 @@ public class IssueService {
         );
     }
 
-    private boolean matchesFilters(Issue issue, String search, String status, String category, String location) {
+    private boolean matchesFilters(Issue issue, String search, String status, String category, String location, LocalDate filterDate) {
 
         boolean matchesSearch = search.isBlank()
                 || contains(issue.getTitle(), search)
@@ -136,8 +145,29 @@ public class IssueService {
         boolean matchesStatus = status.isBlank() || status.equalsIgnoreCase(issue.getStatus());
         boolean matchesCategory = category.isBlank() || category.equalsIgnoreCase(issue.getCategory());
         boolean matchesLocation = location.isBlank() || contains(issue.getLocation(), location.toLowerCase());
+        boolean matchesDate = filterDate == null || matchesDate(issue.getCreatedDate(), filterDate);
 
-        return matchesSearch && matchesStatus && matchesCategory && matchesLocation;
+        return matchesSearch && matchesStatus && matchesCategory && matchesLocation && matchesDate;
+    }
+
+    private boolean matchesDate(LocalDateTime createdDate, LocalDate filterDate) {
+        if (createdDate == null) {
+            return false;
+        }
+
+        return createdDate.toLocalDate().equals(filterDate);
+    }
+
+    private LocalDate parseDate(String date) {
+        if (date == null || date.isBlank()) {
+            return null;
+        }
+
+        try {
+            return LocalDate.parse(date);
+        } catch (DateTimeParseException ex) {
+            return null;
+        }
     }
 
     private boolean contains(String value, String query) {

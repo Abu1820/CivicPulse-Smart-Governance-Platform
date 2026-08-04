@@ -14,7 +14,8 @@ function ViewIssues() {
         search: "",
         status: "",
         category: "",
-        location: ""
+        location: "",
+        date: ""
     });
 
     const [editingIssue, setEditingIssue] = useState(null);
@@ -47,6 +48,10 @@ function ViewIssues() {
 
             if (currentFilters.location) {
                 params.append("location", currentFilters.location);
+            }
+
+            if (currentFilters.date) {
+                params.append("date", currentFilters.date);
             }
 
             const response = await api.get(
@@ -198,7 +203,7 @@ function ViewIssues() {
 
         fetchIssues(filters);
 
-    }, [filters.search, filters.status, filters.category, filters.location]);
+    }, [filters.search, filters.status, filters.category, filters.location, filters.date]);
 
     return (
 
@@ -240,6 +245,13 @@ function ViewIssues() {
                     name="location"
                     placeholder="Location"
                     value={filters.location}
+                    onChange={handleFilterChange}
+                />
+
+                <input
+                    type="date"
+                    name="date"
+                    value={filters.date}
                     onChange={handleFilterChange}
                 />
 

@@ -1,10 +1,18 @@
 import { Navigate } from "react-router-dom";
 
 function ProtectedRoute({ children, role }) {
+  const storedUser = localStorage.getItem("user");
+  const token = localStorage.getItem("token");
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  let user = null;
 
-  if (!user) {
+  try {
+    user = storedUser ? JSON.parse(storedUser) : null;
+  } catch (error) {
+    console.error("Invalid user session in localStorage", error);
+  }
+
+  if (!user || !token) {
     return <Navigate to="/login" replace />;
   }
 
