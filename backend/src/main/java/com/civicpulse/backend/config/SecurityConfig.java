@@ -54,6 +54,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/issues/dashboard/stats").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/issues/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/issues/**").hasRole("ADMIN")
+                        .requestMatchers("/api/issues/**").authenticated()
                         .anyRequest().authenticated())
 
                 .userDetailsService(userDetailsService)

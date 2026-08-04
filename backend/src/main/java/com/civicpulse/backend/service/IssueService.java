@@ -12,6 +12,7 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -108,14 +109,21 @@ public class IssueService {
 
     // Get issue by ID
     public Issue getIssueById(Long id) {
-        return findIssue(id);
+        Issue issue = findIssue(id);
+        User currentUser = getCurrentUser();
+
+        if (currentUser.getRole() != Role.ADMIN && !issue.getUser().getId().equals(currentUser.getId())) {
+            throw new AccessDeniedException("You are not authorized to view this issue");
+        }
+
+        return issue;
     }
 
     // Update issue details
     public Issue updateIssue(Long id, IssueRequest request) {
 
+        requireAdmin();
         Issue issue = findIssue(id);
-        requireOwnership(issue);
 
         issue.setTitle(request.getTitle());
         issue.setDescription(request.getDescription());
@@ -128,8 +136,12 @@ public class IssueService {
     // Update issue status
     public Issue updateStatus(Long id, String status) {
 
+        requireAdmin();
         Issue issue = findIssue(id);
-        requireOwnership(issue);
+
+        if ("Resolved".equalsIgnoreCase(issue.getStatus())) {
+            throw new IllegalArgumentException("Resolved issues cannot be updated.");
+        }
 
         issue.setStatus(status);
 
@@ -139,14 +151,16 @@ public class IssueService {
     // Delete issue
     public void deleteIssue(Long id) {
 
+        requireAdmin();
         Issue issue = findIssue(id);
-        requireOwnership(issue);
 
         issueRepository.delete(issue);
     }
 
     // Dashboard statistics
     public DashboardStats getDashboardStats() {
+
+        requireAdmin();
 
         long total = issueRepository.count();
         long pending = issueRepository.countByStatus("Pending");
@@ -268,11 +282,11 @@ public class IssueService {
         return user;
     }
 
-    private void requireOwnership(Issue issue) {
+    private void requireAdmin() {
         User currentUser = getCurrentUser();
 
-        if (currentUser.getRole() != Role.ADMIN && !issue.getUser().getId().equals(currentUser.getId())) {
-            throw new RuntimeException("You are not allowed to manage this issue");
+        if (currentUser.getRole() != Role.ADMIN) {
+            throw new AccessDeniedException("Only admins are authorized to perform this action");
         }
     }
 

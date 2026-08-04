@@ -47,9 +47,11 @@ function Navbar() {
 
             <Link to="/issues">View Issues</Link>
 
-            <Link to="/admin-dashboard">
-              Dashboard
-            </Link>
+            {user?.role === "ADMIN" && (
+              <Link to="/admin-dashboard">
+                Dashboard
+              </Link>
+            )}
 
             <button
               className="logout-btn"

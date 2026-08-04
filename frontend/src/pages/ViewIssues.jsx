@@ -7,6 +7,7 @@ import "../styles/ViewIssues.css";
 function ViewIssues() {
 
     const navigate = useNavigate();
+    const user = JSON.parse(localStorage.getItem("user") || "null");
 
     const [issues, setIssues] = useState([]);
 
@@ -102,7 +103,11 @@ function ViewIssues() {
 
             console.error(error);
 
-            toast.error("Failed to update status");
+            if (error.response?.data?.message) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error("Failed to update status");
+            }
 
         }
 
@@ -289,7 +294,12 @@ function ViewIssues() {
                             </p>
 
                             <p>
-                                <strong>Status:</strong> {issue.status}
+                                <strong>Status:</strong>{" "}
+                                {issue.status === "Resolved" ? (
+                                    <span className="status resolved-badge">Resolved (Final)</span>
+                                ) : (
+                                    issue.status
+                                )}
                             </p>
 
                             <p>
@@ -324,35 +334,41 @@ function ViewIssues() {
                                     View Details
                                 </button>
 
-                                <button
-                                    className="edit-btn"
-                                    onClick={() =>
-                                        openEditForm(issue)
-                                    }
-                                >
-                                    Edit
-                                </button>
+                                {user?.role === "ADMIN" && (
+                                    <>
+                                        <button
+                                            className="edit-btn"
+                                            onClick={() =>
+                                                openEditForm(issue)
+                                            }
+                                        >
+                                            Edit
+                                        </button>
 
-                                <button
-                                    className="update-btn"
-                                    onClick={() =>
-                                        updateStatus(
-                                            issue.id,
-                                            issue.status
-                                        )
-                                    }
-                                >
-                                    Update Status
-                                </button>
+                                        {issue.status !== "Resolved" && (
+                                            <button
+                                                className="update-btn"
+                                                onClick={() =>
+                                                    updateStatus(
+                                                        issue.id,
+                                                        issue.status
+                                                    )
+                                                }
+                                            >
+                                                Update Status
+                                            </button>
+                                        )}
 
-                                <button
-                                    className="delete-btn"
-                                    onClick={() =>
-                                        deleteIssue(issue.id)
-                                    }
-                                >
-                                    Delete
-                                </button>
+                                        <button
+                                            className="delete-btn"
+                                            onClick={() =>
+                                                deleteIssue(issue.id)
+                                            }
+                                        >
+                                            Delete
+                                        </button>
+                                    </>
+                                )}
 
                             </div>
 
