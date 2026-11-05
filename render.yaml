@@ -1,0 +1,55 @@
+services:
+  # ==============================================================================
+  # CivicPulse Backend Service (Spring Boot 4 / Java 17)
+  # ==============================================================================
+  - type: web
+    name: civicpulse-backend
+    runtime: docker
+    dockerfilePath: backend/Dockerfile
+    dockerContext: backend
+    plan: free
+    region: oregon
+    healthCheckPath: /api/issues
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: civicpulse-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: APP_MAIL_ENABLED
+        value: "true"
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+
+  # ==============================================================================
+  # CivicPulse Frontend Service (React 19 / Vite SPA)
+  # ==============================================================================
+  - type: web
+    name: civicpulse-frontend
+    runtime: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    plan: free
+    region: oregon
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          type: web
+          name: civicpulse-backend
+          property: host
+
+databases:
+  # ==============================================================================
+  # CivicPulse Relational Database
+  # ==============================================================================
+  - name: civicpulse-db
+    databaseName: civicpulse_project
+    plan: free
+    region: oregon
