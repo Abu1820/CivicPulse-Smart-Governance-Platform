@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import com.civicpulse.backend.dto.AuthResponse;
 import com.civicpulse.backend.dto.LoginRequest;
 import com.civicpulse.backend.dto.RegisterRequest;
+import com.civicpulse.backend.dto.ResendCodeRequest;
+import com.civicpulse.backend.dto.VerifyEmailRequest;
 import com.civicpulse.backend.service.UserService;
 
 @RestController
@@ -23,6 +25,16 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.ok(userService.register(request));
+    }
+
+    @PostMapping("/verify-email")
+    public ResponseEntity<AuthResponse> verifyEmail(@Valid @RequestBody VerifyEmailRequest request) {
+        return ResponseEntity.ok(userService.verifyEmail(request));
+    }
+
+    @PostMapping("/resend-code")
+    public ResponseEntity<AuthResponse> resendCode(@Valid @RequestBody ResendCodeRequest request) {
+        return ResponseEntity.ok(userService.resendVerificationCode(request));
     }
 
     @PostMapping("/login")

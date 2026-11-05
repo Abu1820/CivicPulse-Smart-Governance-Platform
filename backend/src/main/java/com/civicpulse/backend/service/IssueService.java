@@ -57,6 +57,8 @@ public class IssueService {
         issue.setTitle(request.getTitle());
         issue.setDescription(request.getDescription());
         issue.setLocation(request.getLocation());
+        issue.setLatitude(request.getLatitude());
+        issue.setLongitude(request.getLongitude());
         issue.setCategory(request.getCategory());
         issue.setStatus("Pending");
         issue.setUser(currentUser);
@@ -75,6 +77,8 @@ public class IssueService {
         issue.setTitle(request.getTitle());
         issue.setDescription(request.getDescription());
         issue.setLocation(request.getLocation());
+        issue.setLatitude(request.getLatitude());
+        issue.setLongitude(request.getLongitude());
         issue.setCategory(request.getCategory());
         issue.setStatus("Pending");
         issue.setUser(currentUser);
@@ -143,6 +147,8 @@ public class IssueService {
         issue.setTitle(request.getTitle());
         issue.setDescription(request.getDescription());
         issue.setLocation(request.getLocation());
+        issue.setLatitude(request.getLatitude());
+        issue.setLongitude(request.getLongitude());
         issue.setCategory(request.getCategory());
 
         Issue updated = issueRepository.save(issue);

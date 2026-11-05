@@ -13,7 +13,7 @@
 
 .register-card {
     width: 100%;
-    max-width: 400px;
+    max-width: 420px;
     background: #ffffff;
     padding: 36px 32px;
     border-radius: 16px;
@@ -29,7 +29,7 @@
 
 .register-card h2 {
     text-align: center;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     font-size: 28px;
     font-weight: 700;
     color: #0F172A;
@@ -70,14 +70,14 @@
 }
 
 /* Password field with toggle button */
-.password-field-container {
+.password-input-wrapper {
     position: relative;
     width: 100%;
     display: flex;
     align-items: center;
 }
 
-.password-field-container input {
+.password-input-wrapper input {
     padding-right: 48px;
 }
 
@@ -112,7 +112,7 @@
     background-color: rgba(45, 212, 191, 0.12);
 }
 
-.register-submit-btn {
+.register-card button[type="submit"] {
     padding: 13px;
     background: #14B8A6;
     color: white;
@@ -125,8 +125,134 @@
     margin-top: 4px;
 }
 
-.register-submit-btn:hover {
+.register-card button[type="submit"]:hover {
     background: #0D9488;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(13, 148, 136, 0.35);
+}
+
+.register-card button[type="submit"]:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.auth-switch-text {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #64748b;
+}
+
+.auth-switch-text a {
+    color: #14b8a6;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-switch-text a:hover {
+    text-decoration: underline;
+}
+
+/* OTP Verification Step */
+.otp-verification-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.otp-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #f0fdfa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    border: 2px solid #ccfbf1;
+}
+
+[data-theme="dark"] .otp-icon-wrapper {
+    background: rgba(20, 184, 166, 0.15);
+    border-color: rgba(45, 212, 191, 0.3);
+}
+
+.otp-subtitle {
+    font-size: 14px;
+    color: #475569;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+[data-theme="dark"] .otp-subtitle {
+    color: #94a3b8;
+}
+
+.otp-subtitle strong {
+    color: #0d9488;
+}
+
+[data-theme="dark"] .otp-subtitle strong {
+    color: #2dd4bf;
+}
+
+.dev-otp-pill {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px dashed #f59e0b;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    margin-bottom: 18px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.dev-otp-pill:hover {
+    background: #fde68a;
+    transform: scale(1.02);
+}
+
+.otp-code-input {
+    text-align: center !important;
+    font-size: 26px !important;
+    font-weight: 700 !important;
+    letter-spacing: 12px !important;
+    padding: 12px !important;
+    border-radius: 10px !important;
+}
+
+.otp-actions-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 18px;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.resend-btn,
+.back-to-reg-btn {
+    background: transparent;
+    border: none;
+    color: #0d9488;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 6px 8px;
+    transition: color 0.2s ease;
+}
+
+.resend-btn:hover,
+.back-to-reg-btn:hover {
+    color: #0f766e;
+    text-decoration: underline;
+}
+
+.resend-btn:disabled {
+    color: #94a3b8;
+    cursor: not-allowed;
+    text-decoration: none;
 }

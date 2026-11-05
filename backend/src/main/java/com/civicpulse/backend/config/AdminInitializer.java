@@ -26,18 +26,24 @@ public class AdminInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        if (!userRepository.existsByEmail("admin@civicpulse.com")) {
+        userRepository.findByEmail("admin@civicpulse.com").ifPresentOrElse(
+                admin -> {
+                    if (!admin.isEmailVerified()) {
+                        admin.setEmailVerified(true);
+                        userRepository.save(admin);
+                    }
+                },
+                () -> {
+                    User admin = new User();
+                    admin.setName("Abdul Admin");
+                    admin.setEmail("admin@civicpulse.com");
+                    admin.setPassword(passwordEncoder.encode("admin123"));
+                    admin.setRole(Role.ADMIN);
+                    admin.setEmailVerified(true);
 
-            User admin = new User();
-
-            admin.setName("Abdul Admin");
-            admin.setEmail("admin@civicpulse.com");
-            admin.setPassword(passwordEncoder.encode("admin123"));
-            admin.setRole(Role.ADMIN);
-
-            userRepository.save(admin);
-
-            log.info("Default admin account seeded successfully: admin@civicpulse.com");
-        }
+                    userRepository.save(admin);
+                    log.info("Default admin account seeded successfully: admin@civicpulse.com");
+                }
+        );
     }
 }

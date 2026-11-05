@@ -24,6 +24,52 @@ public class EmailNotificationService {
         this.mailSender = mailSender;
     }
 
+    public boolean isMailEnabled() {
+        return mailEnabled;
+    }
+
+    @Async
+    public void sendVerificationEmail(String toEmail, String userName, String code) {
+        log.info("==================================================================");
+        log.info("📧 EMAIL VERIFICATION CODE FOR [{}] ({}): {}", userName, toEmail, code);
+        log.info("==================================================================");
+
+        if (!mailEnabled) {
+            log.info("SMTP mail sending is disabled (app.mail.enabled=false). Code logged above.");
+            return;
+        }
+
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(fromEmail);
+            message.setTo(toEmail);
+            message.setSubject("CivicPulse — Verify Your Email Address");
+            message.setText(String.format(
+                    """
+                    Hello %s,
+
+                    Welcome to CivicPulse!
+
+                    Your 6-digit email verification code is:
+
+                        %s
+
+                    This code is valid for 15 minutes. Please enter it in the app to activate your account.
+
+                    If you did not sign up for CivicPulse, please ignore this email.
+
+                    — CivicPulse Smart Governance Team
+                    """,
+                    userName, code
+            ));
+
+            mailSender.send(message);
+            log.info("Verification email sent successfully to: {}", toEmail);
+        } catch (Exception ex) {
+            log.error("Failed to send verification email to {}: {}", toEmail, ex.getMessage());
+        }
+    }
+
     @Async
     public void sendStatusUpdateEmail(String toEmail, String userName, String issueTitle,
                                        String oldStatus, String newStatus) {

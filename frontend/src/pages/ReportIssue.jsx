@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../api/axiosConfig";
 import { getErrorMessage } from "../utils/errorHandler";
+import LocationPickerMap from "../components/LocationPickerMap";
 import "../styles/ReportIssue.css";
 
 function ReportIssue() {
@@ -13,12 +14,16 @@ function ReportIssue() {
     description: "",
     location: "",
     category: "",
+    latitude: null,
+    longitude: null,
   });
 
   const [errors, setErrors] = useState({});
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLocating, setIsLocating] = useState(false);
+  const [showMap, setShowMap] = useState(false);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -69,6 +74,93 @@ function ReportIssue() {
         [name]: "",
       }));
     }
+  };
+
+  const handleLocationSelect = (lat, lon, address) => {
+    setIssue((prev) => ({
+      ...prev,
+      latitude: lat,
+      longitude: lon,
+      location: address || prev.location || `${lat.toFixed(5)}, ${lon.toFixed(5)}`,
+    }));
+
+    if (errors.location) {
+      setErrors((prev) => ({ ...prev, location: "" }));
+    }
+  };
+
+  const handleDetectLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error("Geolocation is not supported by your browser.");
+      return;
+    }
+
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+
+        setIssue((prev) => ({
+          ...prev,
+          latitude: lat,
+          longitude: lon,
+        }));
+        setShowMap(true);
+
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`,
+            { headers: { "Accept-Language": "en" } }
+          );
+          if (res.ok) {
+            const data = await res.json();
+            const addr = data.address || {};
+            const parts = [
+              addr.road || addr.pedestrian || addr.suburb,
+              addr.neighbourhood || addr.city_district || addr.suburb,
+              addr.city || addr.town || addr.village || addr.county,
+              addr.state,
+            ].filter(Boolean);
+
+            const addressStr = parts.length > 0 ? parts.join(", ") : data.display_name;
+
+            setIssue((prev) => ({
+              ...prev,
+              location: addressStr,
+              latitude: lat,
+              longitude: lon,
+            }));
+            toast.success("Location detected successfully!");
+          } else {
+            setIssue((prev) => ({
+              ...prev,
+              location: `${lat.toFixed(5)}, ${lon.toFixed(5)}`,
+            }));
+            toast.info("Coordinates captured!");
+          }
+        } catch {
+          setIssue((prev) => ({
+            ...prev,
+            location: `${lat.toFixed(5)}, ${lon.toFixed(5)}`,
+          }));
+          toast.info("Coordinates captured!");
+        } finally {
+          setIsLocating(false);
+        }
+      },
+      (err) => {
+        setIsLocating(false);
+        console.warn("Geolocation error:", err);
+        if (err.code === 1) {
+          toast.error("Location access denied. Please type manually or pick from the map.");
+        } else {
+          toast.error("Unable to retrieve location. Please type manually or pick from the map.");
+        }
+        setShowMap(true);
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
   };
 
   const handleImageChange = (e) => {
@@ -147,7 +239,10 @@ function ReportIssue() {
         description: "",
         location: "",
         category: "",
+        latitude: null,
+        longitude: null,
       });
+
       setSelectedImage(null);
       setPreviewUrl("");
       setErrors({});
@@ -193,16 +288,52 @@ function ReportIssue() {
             {errors.description && <span className="field-error-text">{errors.description}</span>}
           </div>
 
-          <div className="form-group">
-            <input
-              type="text"
-              name="location"
-              placeholder="Location (e.g. MG Road, Near Park)"
-              value={issue.location}
-              onChange={handleChange}
-              className={errors.location ? "input-error" : ""}
-            />
+          {/* Location & GPS Map Section */}
+          <div className="form-group location-group">
+            <div className="location-input-row">
+              <input
+                type="text"
+                name="location"
+                placeholder="Location (e.g. Anna Salai, Chennai)"
+                value={issue.location}
+                onChange={handleChange}
+                className={errors.location ? "input-error" : ""}
+              />
+              <button
+                type="button"
+                className="detect-location-btn"
+                onClick={handleDetectLocation}
+                disabled={isLocating}
+                title="Detect Current Location via GPS"
+              >
+                {isLocating ? "⏳ Locating..." : "📍 My Location"}
+              </button>
+            </div>
             {errors.location && <span className="field-error-text">{errors.location}</span>}
+
+            <div className="location-map-toggle-row">
+              <button
+                type="button"
+                className="map-toggle-btn"
+                onClick={() => setShowMap((prev) => !prev)}
+              >
+                {showMap ? "Hide Map ▲" : "🗺️ Select / View on Map ▼"}
+              </button>
+              {issue.latitude && issue.longitude && (
+                <span className="coords-badge">
+                  📍 {issue.latitude.toFixed(4)}, {issue.longitude.toFixed(4)}
+                </span>
+              )}
+            </div>
+
+            {showMap && (
+              <LocationPickerMap
+                latitude={issue.latitude}
+                longitude={issue.longitude}
+                onLocationSelect={handleLocationSelect}
+                initialAddress={issue.location}
+              />
+            )}
           </div>
 
           <div className="form-group">

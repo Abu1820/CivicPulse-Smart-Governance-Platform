@@ -12,10 +12,14 @@ public class AuthResponse {
     private Role role;
     private String token;
 
+    private boolean emailVerified = true;
+    private boolean requiresVerification = false;
+    private String devVerificationCode;
+
     public AuthResponse() {
     }
 
-    // Register Response
+    // Register / simple Response
     public AuthResponse(String message, boolean success) {
         this.message = message;
         this.success = success;
@@ -83,5 +87,29 @@ public class AuthResponse {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public boolean isRequiresVerification() {
+        return requiresVerification;
+    }
+
+    public void setRequiresVerification(boolean requiresVerification) {
+        this.requiresVerification = requiresVerification;
+    }
+
+    public String getDevVerificationCode() {
+        return devVerificationCode;
+    }
+
+    public void setDevVerificationCode(String devVerificationCode) {
+        this.devVerificationCode = devVerificationCode;
     }
 }
