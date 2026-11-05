@@ -19,3 +19,7 @@ backend/uploads/*
 # Temp
 .DS_Store
 Thumbs.db
+
+# Local Secrets
+*.env
+*application-local.properties
