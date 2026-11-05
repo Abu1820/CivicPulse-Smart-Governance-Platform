@@ -72,10 +72,6 @@ public class UserService {
         response.setEmail(user.getEmail());
         response.setName(user.getName());
         response.setRequiresVerification(true);
-        if (!emailNotificationService.isMailEnabled()) {
-            response.setDevVerificationCode(otp);
-        }
-
         return response;
     }
 
@@ -148,9 +144,6 @@ public class UserService {
         AuthResponse res = new AuthResponse("A fresh verification code has been sent.", true);
         res.setEmail(user.getEmail());
         res.setRequiresVerification(true);
-        if (!emailNotificationService.isMailEnabled()) {
-            res.setDevVerificationCode(newOtp);
-        }
         return res;
     }
 

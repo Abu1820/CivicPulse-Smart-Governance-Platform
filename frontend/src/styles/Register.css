@@ -198,22 +198,7 @@
     color: #2dd4bf;
 }
 
-.dev-otp-pill {
-    background: #fef3c7;
-    color: #92400e;
-    border: 1px dashed #f59e0b;
-    border-radius: 20px;
-    padding: 6px 14px;
-    font-size: 12px;
-    margin-bottom: 18px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
 
-.dev-otp-pill:hover {
-    background: #fde68a;
-    transform: scale(1.02);
-}
 
 .otp-code-input {
     text-align: center !important;

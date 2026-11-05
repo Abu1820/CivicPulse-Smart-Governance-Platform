@@ -14,7 +14,6 @@ public class AuthResponse {
 
     private boolean emailVerified = true;
     private boolean requiresVerification = false;
-    private String devVerificationCode;
 
     public AuthResponse() {
     }
@@ -103,13 +102,5 @@ public class AuthResponse {
 
     public void setRequiresVerification(boolean requiresVerification) {
         this.requiresVerification = requiresVerification;
-    }
-
-    public String getDevVerificationCode() {
-        return devVerificationCode;
-    }
-
-    public void setDevVerificationCode(String devVerificationCode) {
-        this.devVerificationCode = devVerificationCode;
     }
 }

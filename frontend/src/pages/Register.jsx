@@ -22,7 +22,6 @@ function Register() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationEmail, setVerificationEmail] = useState("");
   const [otpCode, setOtpCode] = useState("");
-  const [devCode, setDevCode] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
   const [isVerifyingCode, setIsVerifyingCode] = useState(false);
 
@@ -94,9 +93,6 @@ function Register() {
 
       toast.success("Verification code sent to your email!");
       setVerificationEmail(register.email);
-      if (response.data?.devVerificationCode) {
-        setDevCode(response.data.devVerificationCode);
-      }
       setIsVerifying(true);
       setResendCooldown(30);
     } catch (error) {
@@ -169,9 +165,6 @@ function Register() {
 
       if (response.data.success) {
         toast.success("A fresh verification code has been dispatched!");
-        if (response.data?.devVerificationCode) {
-          setDevCode(response.data.devVerificationCode);
-        }
         setResendCooldown(30);
       } else {
         toast.error(response.data.message || "Failed to resend code");
@@ -272,15 +265,6 @@ function Register() {
               <strong>{verificationEmail}</strong>
             </p>
 
-            {devCode && (
-              <div
-                className="dev-otp-pill"
-                onClick={() => setOtpCode(devCode)}
-                title="Click to auto-fill development OTP"
-              >
-                🧪 Dev Mode OTP: <strong>{devCode}</strong> (Click to auto-fill)
-              </div>
-            )}
 
             <form onSubmit={handleVerifySubmit} noValidate>
               <div className="form-group">
