@@ -18,7 +18,6 @@ public class AdminInitializer implements CommandLineRunner {
 
     public AdminInitializer(UserRepository userRepository,
                             PasswordEncoder passwordEncoder) {
-
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -26,24 +25,34 @@ public class AdminInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        userRepository.findByEmail("admin@civicpulse.com").ifPresentOrElse(
-                admin -> {
-                    if (!admin.isEmailVerified()) {
-                        admin.setEmailVerified(true);
-                        userRepository.save(admin);
-                    }
-                },
-                () -> {
-                    User admin = new User();
-                    admin.setName("Abdul Admin");
-                    admin.setEmail("admin@civicpulse.com");
-                    admin.setPassword(passwordEncoder.encode("admin123"));
-                    admin.setRole(Role.ADMIN);
-                    admin.setEmailVerified(true);
+        // Ensure owner/primary administrator account is always granted ADMIN rights
+        userRepository.findByEmail("abdulmajeed564600@gmail.com").ifPresent(adminUser -> {
+            boolean updated = false;
+            if (adminUser.getRole() != Role.ADMIN) {
+                adminUser.setRole(Role.ADMIN);
+                updated = true;
+            }
+            if (!adminUser.isEmailVerified()) {
+                adminUser.setEmailVerified(true);
+                updated = true;
+            }
+            if (updated) {
+                userRepository.save(adminUser);
+                log.info("Primary administrator verified and promoted to ADMIN: abdulmajeed564600@gmail.com");
+            }
+        });
 
-                    userRepository.save(admin);
-                    log.info("Default admin account seeded successfully: admin@civicpulse.com");
-                }
-        );
+        // Seed a standard Citizen Demo account for public visitors/recruiters (non-admin)
+        if (!userRepository.existsByEmail("citizen@civicpulse.com")) {
+            User citizen = new User();
+            citizen.setName("Citizen Demo");
+            citizen.setEmail("citizen@civicpulse.com");
+            citizen.setPassword(passwordEncoder.encode("citizen123"));
+            citizen.setRole(Role.USER);
+            citizen.setEmailVerified(true);
+
+            userRepository.save(citizen);
+            log.info("Public Citizen demo account seeded successfully: citizen@civicpulse.com");
+        }
     }
 }
