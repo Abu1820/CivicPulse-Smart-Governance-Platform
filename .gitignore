@@ -7,9 +7,15 @@ frontend/dist/
 
 # Backend
 backend/target/
+backend/uploads/*
+!backend/uploads/.gitkeep
 
 # VS Code
 .vscode/
 
 # Logs
 *.log
+
+# Temp
+.DS_Store
+Thumbs.db

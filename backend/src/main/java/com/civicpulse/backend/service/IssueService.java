@@ -9,13 +9,18 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,15 +32,21 @@ import com.civicpulse.backend.entity.User;
 import com.civicpulse.backend.repository.IssueRepository;
 import com.civicpulse.backend.repository.UserRepository;
 
+@Slf4j
 @Service
+@Transactional
 public class IssueService {
 
     private final IssueRepository issueRepository;
     private final UserRepository userRepository;
+    private final EmailNotificationService emailNotificationService;
 
-    public IssueService(IssueRepository issueRepository, UserRepository userRepository) {
+    public IssueService(IssueRepository issueRepository,
+                        UserRepository userRepository,
+                        EmailNotificationService emailNotificationService) {
         this.issueRepository = issueRepository;
         this.userRepository = userRepository;
+        this.emailNotificationService = emailNotificationService;
     }
 
     // Create a new issue
@@ -50,7 +61,9 @@ public class IssueService {
         issue.setStatus("Pending");
         issue.setUser(currentUser);
 
-        return issueRepository.save(issue);
+        Issue saved = issueRepository.save(issue);
+        log.info("Issue created with id {} by user {}", saved.getId(), currentUser.getEmail());
+        return saved;
     }
 
     public Issue createIssueWithImage(IssueRequest request, MultipartFile imageFile) {
@@ -70,7 +83,9 @@ public class IssueService {
             issue.setImagePath(storeImage(imageFile));
         }
 
-        return issueRepository.save(issue);
+        Issue saved = issueRepository.save(issue);
+        log.info("Issue with image created with id {} by user {}", saved.getId(), currentUser.getEmail());
+        return saved;
     }
 
     // Get all issues
@@ -130,7 +145,9 @@ public class IssueService {
         issue.setLocation(request.getLocation());
         issue.setCategory(request.getCategory());
 
-        return issueRepository.save(issue);
+        Issue updated = issueRepository.save(issue);
+        log.info("Issue details updated for id {}", id);
+        return updated;
     }
 
     // Update issue status
@@ -143,9 +160,23 @@ public class IssueService {
             throw new IllegalArgumentException("Resolved issues cannot be updated.");
         }
 
+        String oldStatus = issue.getStatus();
         issue.setStatus(status);
+        Issue updated = issueRepository.save(issue);
+        log.info("Status updated for issue id {}: {} -> {}", id, oldStatus, status);
 
-        return issueRepository.save(issue);
+        // Notify reporter asynchronously
+        if (issue.getUser() != null && issue.getUser().getEmail() != null) {
+            emailNotificationService.sendStatusUpdateEmail(
+                    issue.getUser().getEmail(),
+                    issue.getUser().getName(),
+                    issue.getTitle(),
+                    oldStatus,
+                    status
+            );
+        }
+
+        return updated;
     }
 
     // Delete issue
@@ -155,6 +186,7 @@ public class IssueService {
         Issue issue = findIssue(id);
 
         issueRepository.delete(issue);
+        log.info("Issue deleted with id {}", id);
     }
 
     // Dashboard statistics
@@ -167,11 +199,18 @@ public class IssueService {
         long inProgress = issueRepository.countByStatus("In Progress");
         long resolved = issueRepository.countByStatus("Resolved");
 
+        Map<String, Long> categoryStats = new LinkedHashMap<>();
+        issueRepository.findAll().forEach(issue -> {
+            String cat = issue.getCategory() != null ? issue.getCategory() : "Other";
+            categoryStats.put(cat, categoryStats.getOrDefault(cat, 0L) + 1);
+        });
+
         return new DashboardStats(
                 total,
                 pending,
                 inProgress,
-                resolved
+                resolved,
+                categoryStats
         );
     }
 
@@ -264,16 +303,9 @@ public class IssueService {
     private User getCurrentUser() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        System.out.println("========== AUTH DEBUG ==========");
-        System.out.println(authentication);
-        System.out.println("Name = " + authentication.getName());
-
         String email = authentication.getName();
 
         User user = userRepository.findByEmail(email).orElse(null);
-
-        System.out.println("USER FOUND = " + user);
 
         if (user == null) {
             throw new RuntimeException("User not found in DB");

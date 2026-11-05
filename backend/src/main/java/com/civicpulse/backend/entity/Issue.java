@@ -17,7 +17,7 @@ public class Issue {
 	@Column(nullable = false)
 	private String title;
 
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "TEXT")
 	private String description;
 
 	@Column(nullable = false)
@@ -32,6 +32,9 @@ public class Issue {
 	@Column(nullable = false, updatable = false)
 	private LocalDateTime createdDate;
 
+	@Column
+	private LocalDateTime updatedDate;
+
 	@Column(name = "image_path")
 	private String imagePath;
 
@@ -43,6 +46,11 @@ public class Issue {
 	@PrePersist
 	public void onCreate() {
 		createdDate = LocalDateTime.now();
+	}
+
+	@PreUpdate
+	public void onUpdate() {
+		updatedDate = LocalDateTime.now();
 	}
 
 	public Issue() {
@@ -94,6 +102,10 @@ public class Issue {
 
 	public LocalDateTime getCreatedDate() {
 		return createdDate;
+	}
+
+	public LocalDateTime getUpdatedDate() {
+		return updatedDate;
 	}
 
 	public String getImagePath() {

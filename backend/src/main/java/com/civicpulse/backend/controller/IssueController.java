@@ -3,6 +3,8 @@ package com.civicpulse.backend.controller;
 import java.io.IOException;
 import java.util.List;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,20 +18,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/api/issues")
-@CrossOrigin(origins = "http://localhost:5173")
 public class IssueController {
 
     private final IssueService issueService;
+    private final ObjectMapper objectMapper;
 
-    public IssueController(IssueService issueService) {
+    public IssueController(IssueService issueService, ObjectMapper objectMapper) {
         this.issueService = issueService;
+        this.objectMapper = objectMapper;
     }
 
     // Create a new issue
     @PostMapping
-    public ResponseEntity<Issue> createIssue(@RequestBody IssueRequest request) {
+    public ResponseEntity<Issue> createIssue(@Valid @RequestBody IssueRequest request) {
         Issue issue = issueService.createIssue(request);
-
         return ResponseEntity.ok(issue);
     }
 
@@ -38,9 +40,7 @@ public class IssueController {
             @RequestPart("issue") String issueJson,
             @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
 
-        ObjectMapper objectMapper = new ObjectMapper();
         IssueRequest request = objectMapper.readValue(issueJson, IssueRequest.class);
-
         return ResponseEntity.ok(issueService.createIssueWithImage(request, image));
     }
 
@@ -59,7 +59,6 @@ public class IssueController {
     // Get issue by ID
     @GetMapping("/{id}")
     public ResponseEntity<Issue> getIssueById(@PathVariable Long id) {
-
         return ResponseEntity.ok(issueService.getIssueById(id));
     }
 
@@ -67,10 +66,9 @@ public class IssueController {
     @PutMapping("/{id}")
     public ResponseEntity<Issue> updateIssue(
             @PathVariable Long id,
-            @RequestBody IssueRequest request) {
+            @Valid @RequestBody IssueRequest request) {
 
         Issue issue = issueService.updateIssue(id, request);
-
         return ResponseEntity.ok(issue);
     }
 
@@ -81,23 +79,19 @@ public class IssueController {
             @RequestParam String status) {
 
         Issue issue = issueService.updateStatus(id, status);
-
         return ResponseEntity.ok(issue);
     }
 
     // Delete issue
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteIssue(@PathVariable Long id) {
-
         issueService.deleteIssue(id);
-
         return ResponseEntity.ok("Issue deleted successfully");
     }
 
     // Dashboard statistics
     @GetMapping("/dashboard/stats")
     public ResponseEntity<DashboardStats> getDashboardStats() {
-
         return ResponseEntity.ok(issueService.getDashboardStats());
     }
 }

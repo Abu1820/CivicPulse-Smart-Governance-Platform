@@ -1,0 +1,204 @@
+.profile-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px 60px;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    margin-bottom: 32px;
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    min-width: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0fdfa;
+    border-radius: 50%;
+    border: 3px solid #14b8a6;
+    box-shadow: 0 4px 14px rgba(20, 184, 166, 0.2);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.avatar-icon {
+    color: #0d9488;
+    display: block;
+    margin: auto;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+[data-theme="dark"] .profile-header {
+    background: #1e293b;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .profile-avatar {
+    background: rgba(20, 184, 166, 0.15);
+    border-color: #2dd4bf;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .avatar-icon {
+    color: #2dd4bf;
+}
+
+[data-theme="dark"] .profile-info h2 {
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] .profile-email {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .profile-stat-card {
+    background: #1e293b;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] .profile-stat-card h1 {
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] .profile-stat-card h3 {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .profile-chart {
+    background: #1e293b;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] .profile-chart h3 {
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] .profile-actions button.secondary {
+    background: #334155;
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .profile-actions button.secondary:hover {
+    background: #475569;
+}
+
+.profile-info h2 {
+    font-size: 1.6rem;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+
+.profile-email {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+}
+
+.profile-role {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.profile-role.admin {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.profile-role.user {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.profile-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.profile-stat-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    border-left: 4px solid #14b8a6;
+}
+
+.profile-stat-card.pending { border-left-color: #f59e0b; }
+.profile-stat-card.progress { border-left-color: #3b82f6; }
+.profile-stat-card.resolved { border-left-color: #10b981; }
+
+.profile-stat-card h3 {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.profile-stat-card h1 {
+    font-size: 2.2rem;
+    color: #0f172a;
+    font-weight: 700;
+}
+
+.profile-chart {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    margin-bottom: 32px;
+}
+
+.profile-chart h3 {
+    text-align: center;
+    font-size: 1.05rem;
+    color: #0f172a;
+    margin-bottom: 16px;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.profile-actions button {
+    padding: 12px 28px;
+    border-radius: 8px;
+    border: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: #0d9488;
+    color: #ffffff;
+    transition: background 0.2s;
+}
+
+.profile-actions button:hover {
+    background: #0f766e;
+}
+
+.profile-actions button.secondary {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.profile-actions button.secondary:hover {
+    background: #e2e8f0;
+}

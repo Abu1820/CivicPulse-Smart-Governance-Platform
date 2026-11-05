@@ -1,5 +1,7 @@
 package com.civicpulse.backend.service;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,7 @@ import com.civicpulse.backend.entity.User;
 import com.civicpulse.backend.jwt.JwtService;
 import com.civicpulse.backend.repository.UserRepository;
 
+@Slf4j
 @Service
 public class UserService {
 
@@ -30,6 +33,7 @@ public class UserService {
     public AuthResponse register(RegisterRequest request) {
 
         if (userRepository.existsByEmail(request.getEmail())) {
+            log.warn("Registration attempt with existing email: {}", request.getEmail());
             return new AuthResponse("Email already exists", false);
         }
 
@@ -45,43 +49,32 @@ public class UserService {
         user.setRole(Role.USER);
 
         userRepository.save(user);
+        log.info("New user registered successfully: {}", request.getEmail());
 
         return new AuthResponse("Registration Successful", true);
     }
 
     public AuthResponse login(LoginRequest request) {
 
-        System.out.println("\n========== LOGIN DEBUG ==========");
-
-        System.out.println("Entered Email: " + request.getEmail());
+        log.debug("Login attempt for email: {}", request.getEmail());
 
         User user = userRepository.findByEmail(request.getEmail()).orElse(null);
 
         if (user == null) {
-            System.out.println("❌ User NOT FOUND");
+            log.warn("Login failed: User not found with email {}", request.getEmail());
             return new AuthResponse("User not found", false);
         }
-
-        System.out.println("Database Email : " + user.getEmail());
-        System.out.println("Entered Password : " + request.getPassword());
-        System.out.println("Stored Password Hash : " + user.getPassword());
 
         boolean passwordMatch =
                 passwordEncoder.matches(request.getPassword(), user.getPassword());
 
-        System.out.println("Password Match : " + passwordMatch);
-
         if (!passwordMatch) {
-            System.out.println("❌ Invalid Password");
+            log.warn("Login failed: Invalid password for email {}", request.getEmail());
             return new AuthResponse("Invalid password", false);
         }
 
-        System.out.println("✅ Password Verified");
-
         String token = jwtService.generateToken(user.getEmail());
-
-        System.out.println("JWT Generated Successfully");
-        System.out.println("========== END LOGIN ==========\n");
+        log.info("User authenticated successfully: {}", user.getEmail());
 
         return new AuthResponse(
                 "Login Successful",

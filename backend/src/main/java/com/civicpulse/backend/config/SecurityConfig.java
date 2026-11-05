@@ -2,11 +2,11 @@ package com.civicpulse.backend.config;
 
 import com.civicpulse.backend.jwt.JwtAuthenticationFilter;
 import com.civicpulse.backend.jwt.JwtService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -51,6 +51,14 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setContentType("application/json");
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.getWriter().write("{\"message\":\"Unauthorized\"}");
+                        })
+                )
+
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
@@ -65,9 +73,7 @@ public class SecurityConfig {
 
                 .addFilterBefore(
                         jwtAuthenticationFilter(),
-                        UsernamePasswordAuthenticationFilter.class)
-
-                .httpBasic(Customizer.withDefaults());
+                        UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

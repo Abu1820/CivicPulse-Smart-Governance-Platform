@@ -11,6 +11,7 @@ import ReportIssue from "./pages/ReportIssue";
 import ViewIssues from "./pages/ViewIssues";
 import IssueDetails from "./pages/IssueDetails";
 import AdminDashboard from "./pages/AdminDashboard";
+import UserProfile from "./pages/UserProfile";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -20,11 +21,8 @@ function App() {
 
             <main className="main-content-wrapper">
                 <Routes>
-
                     <Route path="/" element={<Home />} />
-
                     <Route path="/login" element={<Login />} />
-
                     <Route path="/register" element={<Register />} />
 
                     <Route
@@ -63,8 +61,16 @@ function App() {
                         }
                     />
 
-                    <Route path="*" element={<NotFound />} />
+                    <Route
+                        path="/profile"
+                        element={
+                            <ProtectedRoute>
+                                <UserProfile />
+                            </ProtectedRoute>
+                        }
+                    />
 
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
             </main>
 

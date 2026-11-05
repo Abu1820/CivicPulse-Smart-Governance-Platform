@@ -1,11 +1,24 @@
 package com.civicpulse.backend.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class IssueRequest {
 
+    @NotBlank(message = "Title is required")
+    @Size(max = 100, message = "Title must not exceed 100 characters")
     private String title;
+
+    @NotBlank(message = "Description is required")
+    @Size(max = 2000, message = "Description must not exceed 2000 characters")
     private String description;
+
+    @NotBlank(message = "Location is required")
     private String location;
+
+    @NotBlank(message = "Category is required")
     private String category;
+
     private String imagePath;
 
     public IssueRequest() {

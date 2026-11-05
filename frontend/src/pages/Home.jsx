@@ -4,18 +4,36 @@ import Features from "../components/Features";
 import Footer from "../components/Footer";
 
 function Home() {
+  const storedUser = localStorage.getItem("user");
+  let user = null;
+  try {
+    user = storedUser ? JSON.parse(storedUser) : null;
+  } catch (e) {
+    user = null;
+  }
+
+  const isAdmin = user?.role === "ADMIN";
+
   return (
     <>
       <section className="hero">
         <h1>Welcome to CivicPulse</h1>
 
         <p>
-          Report civic issues quickly and help improve your community.
+          {isAdmin
+            ? "Monitor civic reports, review resolution analytics, and manage community governance."
+            : "Report civic issues quickly and help improve your community."}
         </p>
 
-        <Link to="/report">
-          <button>Report an Issue</button>
-        </Link>
+        {isAdmin ? (
+          <Link to="/admin-dashboard">
+            <button>Admin Dashboard</button>
+          </Link>
+        ) : (
+          <Link to="/report">
+            <button>Report an Issue</button>
+          </Link>
+        )}
       </section>
 
       <Features />

@@ -2,15 +2,14 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../api/axiosConfig";
+import ConfirmModal from "../components/ConfirmModal";
 import "../styles/ViewIssues.css";
 
 function ViewIssues() {
-
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user") || "null");
 
     const [issues, setIssues] = useState([]);
-
     const [filters, setFilters] = useState({
         search: "",
         status: "",
@@ -20,7 +19,6 @@ function ViewIssues() {
     });
 
     const [editingIssue, setEditingIssue] = useState(null);
-
     const [formData, setFormData] = useState({
         title: "",
         description: "",
@@ -28,196 +26,126 @@ function ViewIssues() {
         category: ""
     });
 
+    const [deleteModal, setDeleteModal] = useState({
+        isOpen: false,
+        issueId: null
+    });
+
     // Fetch All Issues
     const fetchIssues = async (currentFilters = filters) => {
-
         try {
-
             const params = new URLSearchParams();
 
-            if (currentFilters.search) {
-                params.append("search", currentFilters.search);
-            }
-
-            if (currentFilters.status) {
-                params.append("status", currentFilters.status);
-            }
-
-            if (currentFilters.category) {
-                params.append("category", currentFilters.category);
-            }
-
-            if (currentFilters.location) {
-                params.append("location", currentFilters.location);
-            }
-
-            if (currentFilters.date) {
-                params.append("date", currentFilters.date);
-            }
+            if (currentFilters.search) params.append("search", currentFilters.search);
+            if (currentFilters.status) params.append("status", currentFilters.status);
+            if (currentFilters.category) params.append("category", currentFilters.category);
+            if (currentFilters.location) params.append("location", currentFilters.location);
+            if (currentFilters.date) params.append("date", currentFilters.date);
 
             const response = await api.get(
                 `/issues${params.toString() ? `?${params.toString()}` : ""}`
             );
 
             setIssues(response.data);
-
         } catch (error) {
-
             console.error(error);
-
             toast.error("Failed to fetch issues");
-
         }
-
     };
 
     // Update Status
     const updateStatus = async (id, currentStatus) => {
-
         let newStatus = "";
 
         if (currentStatus === "Pending") {
             newStatus = "In Progress";
-        }
-        else if (currentStatus === "In Progress") {
+        } else if (currentStatus === "In Progress") {
             newStatus = "Resolved";
-        }
-        else {
-
+        } else {
             toast.info("Issue is already resolved");
             return;
-
         }
 
         try {
-
-            await api.put(
-                `/issues/${id}/status?status=${newStatus}`
-            );
-
+            await api.put(`/issues/${id}/status?status=${newStatus}`);
             toast.success("Status updated successfully!");
-
             fetchIssues();
-
         } catch (error) {
-
             console.error(error);
-
-            if (error.response?.data?.message) {
-                toast.error(error.response.data.message);
-            } else {
-                toast.error("Failed to update status");
-            }
-
+            toast.error(error.response?.data?.message || "Failed to update status");
         }
-
     };
 
-    // Delete Issue
-    const deleteIssue = async (id) => {
+    // Trigger delete confirmation modal
+    const requestDelete = (id) => {
+        setDeleteModal({ isOpen: true, issueId: id });
+    };
 
-        const confirmDelete = window.confirm(
-            "Are you sure you want to delete this issue?"
-        );
-
-        if (!confirmDelete) return;
+    // Confirmed Delete Issue
+    const handleDeleteConfirm = async () => {
+        const id = deleteModal.issueId;
+        setDeleteModal({ isOpen: false, issueId: null });
 
         try {
-
-            await api.delete(
-                `/issues/${id}`
-            );
-
+            await api.delete(`/issues/${id}`);
             toast.success("Issue deleted successfully!");
-
             fetchIssues();
-
         } catch (error) {
-
             console.error(error);
-
             toast.error("Failed to delete issue");
-
         }
-
     };
 
     // Open Edit Form
     const openEditForm = (issue) => {
-
         setEditingIssue(issue);
-
         setFormData({
             title: issue.title,
             description: issue.description,
             location: issue.location,
             category: issue.category
         });
-
     };
 
     // Handle Issue Form Input Change
     const handleChange = (e) => {
-
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
         });
-
     };
 
     // Handle Filter Input Change
     const handleFilterChange = (e) => {
-
         const { name, value } = e.target;
-
         setFilters((prevFilters) => ({
             ...prevFilters,
             [name]: value
         }));
-
     };
 
     // Update Issue
     const updateIssue = async () => {
-
         try {
-
-            await api.put(
-                `/issues/${editingIssue.id}`,
-                formData
-            );
-
+            await api.put(`/issues/${editingIssue.id}`, formData);
             toast.success("Issue updated successfully!");
-
             setEditingIssue(null);
-
             fetchIssues();
-
         } catch (error) {
-
             console.error(error);
-
             toast.error("Failed to update issue");
-
         }
-
     };
 
     useEffect(() => {
-
         fetchIssues(filters);
-
     }, [filters.search, filters.status, filters.category, filters.location, filters.date]);
 
     return (
-
         <div className="issues-container">
-
             <h2>Reported Issues</h2>
 
             <div className="filter-controls">
-
                 <input
                     type="text"
                     name="search"
@@ -237,18 +165,24 @@ function ViewIssues() {
                     <option value="Resolved">Resolved</option>
                 </select>
 
-                <input
-                    type="text"
+                <select
                     name="category"
-                    placeholder="Category"
                     value={filters.category}
                     onChange={handleFilterChange}
-                />
+                >
+                    <option value="">All Categories</option>
+                    <option value="Road">Road</option>
+                    <option value="Garbage">Garbage</option>
+                    <option value="Water Leakage">Water Leakage</option>
+                    <option value="Street Light">Street Light</option>
+                    <option value="Drainage">Drainage</option>
+                    <option value="Other">Other</option>
+                </select>
 
                 <input
                     type="text"
                     name="location"
-                    placeholder="Location"
+                    placeholder="Filter by location"
                     value={filters.location}
                     onChange={handleFilterChange}
                 />
@@ -259,55 +193,44 @@ function ViewIssues() {
                     value={filters.date}
                     onChange={handleFilterChange}
                 />
-
             </div>
 
             {issues.length === 0 ? (
-
-                <p className="no-issues">
-                    No Issues Found
-                </p>
-
+                <p className="no-issues">No Issues Found</p>
             ) : (
-
                 <div className="issues-grid">
-
                     {issues.map((issue) => (
-
-                        <div
-                            className="issue-card"
-                            key={issue.id}
-                        >
-
+                        <div className="issue-card" key={issue.id}>
                             <h3>{issue.title}</h3>
 
-                            <p>
-                                <strong>Description:</strong> {issue.description}
-                            </p>
-
-                            <p>
-                                <strong>Location:</strong> {issue.location}
-                            </p>
-
-                            <p>
-                                <strong>Category:</strong> {issue.category}
-                            </p>
+                            <p><strong>Description:</strong> {issue.description}</p>
+                            <p><strong>Location:</strong> {issue.location}</p>
+                            <p><strong>Category:</strong> {issue.category}</p>
 
                             <p>
                                 <strong>Status:</strong>{" "}
                                 {issue.status === "Resolved" ? (
-                                    <span className="status resolved-badge">Resolved (Final)</span>
+                                    <span className="status resolved-badge">Resolved ✓</span>
+                                ) : issue.status === "In Progress" ? (
+                                    <span className="status progress-badge">In Progress</span>
                                 ) : (
-                                    issue.status
+                                    <span className="status pending-badge">Pending</span>
                                 )}
                             </p>
 
                             <p>
-                                <strong>Created:</strong>{" "}
+                                <strong>Reported:</strong>{" "}
                                 {issue.createdDate
                                     ? new Date(issue.createdDate).toLocaleString()
                                     : "N/A"}
                             </p>
+
+                            {issue.updatedDate && (
+                                <p>
+                                    <strong>Updated:</strong>{" "}
+                                    {new Date(issue.updatedDate).toLocaleString()}
+                                </p>
+                            )}
 
                             <div className="issue-image-wrapper">
                                 {issue.imagePath ? (
@@ -315,6 +238,9 @@ function ViewIssues() {
                                         src={`http://localhost:8080${issue.imagePath}`}
                                         alt={issue.title}
                                         className="issue-image"
+                                        onError={(e) => {
+                                            e.currentTarget.style.display = "none";
+                                        }}
                                     />
                                 ) : (
                                     <div className="issue-image-placeholder">
@@ -324,12 +250,9 @@ function ViewIssues() {
                             </div>
 
                             <div className="button-group">
-
                                 <button
                                     className="details-btn"
-                                    onClick={() =>
-                                        navigate(`/issues/${issue.id}`)
-                                    }
+                                    onClick={() => navigate(`/issues/${issue.id}`)}
                                 >
                                     View Details
                                 </button>
@@ -338,9 +261,7 @@ function ViewIssues() {
                                     <>
                                         <button
                                             className="edit-btn"
-                                            onClick={() =>
-                                                openEditForm(issue)
-                                            }
+                                            onClick={() => openEditForm(issue)}
                                         >
                                             Edit
                                         </button>
@@ -349,10 +270,7 @@ function ViewIssues() {
                                             <button
                                                 className="update-btn"
                                                 onClick={() =>
-                                                    updateStatus(
-                                                        issue.id,
-                                                        issue.status
-                                                    )
+                                                    updateStatus(issue.id, issue.status)
                                                 }
                                             >
                                                 Update Status
@@ -361,31 +279,21 @@ function ViewIssues() {
 
                                         <button
                                             className="delete-btn"
-                                            onClick={() =>
-                                                deleteIssue(issue.id)
-                                            }
+                                            onClick={() => requestDelete(issue.id)}
                                         >
                                             Delete
                                         </button>
                                     </>
                                 )}
-
                             </div>
-
                         </div>
-
                     ))}
-
                 </div>
-
             )}
 
             {editingIssue && (
-
                 <div className="edit-modal">
-
                     <div className="edit-card">
-
                         <h2>Edit Issue</h2>
 
                         <input
@@ -411,44 +319,43 @@ function ViewIssues() {
                             onChange={handleChange}
                         />
 
-                        <input
-                            type="text"
+                        <select
                             name="category"
-                            placeholder="Category"
                             value={formData.category}
                             onChange={handleChange}
-                        />
+                        >
+                            <option value="Road">Road</option>
+                            <option value="Garbage">Garbage</option>
+                            <option value="Water Leakage">Water Leakage</option>
+                            <option value="Street Light">Street Light</option>
+                            <option value="Drainage">Drainage</option>
+                            <option value="Other">Other</option>
+                        </select>
 
                         <div className="modal-buttons">
-
-                            <button
-                                className="save-btn"
-                                onClick={updateIssue}
-                            >
+                            <button className="save-btn" onClick={updateIssue}>
                                 Save Changes
                             </button>
 
                             <button
                                 className="cancel-btn"
-                                onClick={() =>
-                                    setEditingIssue(null)
-                                }
+                                onClick={() => setEditingIssue(null)}
                             >
                                 Cancel
                             </button>
-
                         </div>
-
                     </div>
-
                 </div>
-
             )}
 
+            <ConfirmModal
+                isOpen={deleteModal.isOpen}
+                message="Are you sure you want to delete this issue? This action cannot be undone."
+                onConfirm={handleDeleteConfirm}
+                onCancel={() => setDeleteModal({ isOpen: false, issueId: null })}
+            />
         </div>
-
     );
-
 }
 
 export default ViewIssues;

@@ -1,5 +1,6 @@
 package com.civicpulse.backend.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -8,6 +9,7 @@ import com.civicpulse.backend.entity.Role;
 import com.civicpulse.backend.entity.User;
 import com.civicpulse.backend.repository.UserRepository;
 
+@Slf4j
 @Component
 public class AdminInitializer implements CommandLineRunner {
 
@@ -35,11 +37,7 @@ public class AdminInitializer implements CommandLineRunner {
 
             userRepository.save(admin);
 
-            System.out.println("==================================");
-            System.out.println("Admin account created successfully");
-            System.out.println("Email    : admin@civicpulse.com");
-            System.out.println("Password : admin123");
-            System.out.println("==================================");
+            log.info("Default admin account seeded successfully: admin@civicpulse.com");
         }
     }
 }

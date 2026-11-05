@@ -229,32 +229,63 @@
 }
 
 .edit-card input,
-.edit-card textarea {
+.edit-card textarea,
+.edit-card select {
     width: 100%;
 
-    padding: 12px;
-    margin-bottom: 15px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
 
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
 
-    font-size: 16px;
+    font-size: 15px;
     font-family: inherit;
-    color: #333;
+    color: #0F172A;
+    background: #FFFFFF;
 
     box-sizing: border-box;
+    display: block;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.edit-card select {
+    cursor: pointer;
+    height: 48px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+[data-theme="dark"] .edit-card select {
+    background-color: #0f172a;
+    border-color: #334155;
+    color: #f1f5f9;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+[data-theme="dark"] .edit-card select option {
+    background-color: #0f172a;
+    color: #f1f5f9;
 }
 
 .edit-card textarea {
     resize: vertical;
-    min-height: 150px;
+    min-height: 140px;
 }
 
 .edit-card input:focus,
-.edit-card textarea:focus {
+.edit-card textarea:focus,
+.edit-card select:focus {
     outline: none;
     border-color: #14B8A6;
-    box-shadow: 0 0 6px rgba(20, 184, 166, 0.4);
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
 }
 
 .modal-buttons {
