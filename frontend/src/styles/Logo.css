@@ -13,6 +13,10 @@
     transform: translateY(-1px);
 }
 
+.navbar .civicpulse-brand:hover {
+    transform: none;
+}
+
 /* Icon Container */
 .brand-icon-wrapper {
     display: flex;
