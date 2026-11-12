@@ -25,7 +25,35 @@ public class AdminInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        // Ensure owner/primary administrator account is always granted ADMIN rights
+        // Ensure primary admin account (admin@civicpulse.com) is always present with ADMIN rights
+        userRepository.findByEmail("admin@civicpulse.com").ifPresentOrElse(
+                admin -> {
+                    boolean updated = false;
+                    if (admin.getRole() != Role.ADMIN) {
+                        admin.setRole(Role.ADMIN);
+                        updated = true;
+                    }
+                    if (!admin.isEmailVerified()) {
+                        admin.setEmailVerified(true);
+                        updated = true;
+                    }
+                    if (updated) {
+                        userRepository.save(admin);
+                    }
+                },
+                () -> {
+                    User admin = new User();
+                    admin.setName("CivicPulse Admin");
+                    admin.setEmail("admin@civicpulse.com");
+                    admin.setPassword(passwordEncoder.encode("admin123"));
+                    admin.setRole(Role.ADMIN);
+                    admin.setEmailVerified(true);
+                    userRepository.save(admin);
+                    log.info("Default admin account seeded successfully: admin@civicpulse.com / admin123");
+                }
+        );
+
+        // Ensure owner administrator account is always granted ADMIN rights
         userRepository.findByEmail("abdulmajeed564600@gmail.com").ifPresent(adminUser -> {
             boolean updated = false;
             if (adminUser.getRole() != Role.ADMIN) {

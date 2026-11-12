@@ -37,9 +37,9 @@ Visitors and recruiters can explore the deployed application or test locally wit
 
 | Account Type | Email | Password | Access Level |
 |---|---|---|---|
+| **Municipal Administrator** | `admin@civicpulse.com` | `admin123` | Full Admin Dashboard, Real-Time Analytics, Issue Resolution & Workflows |
 | **Citizen Demo** | `citizen@civicpulse.com` | `citizen123` | Geotagged Issue Reporting, Interactive GPS Map, Personal Issue History |
 | **New Citizen Sign-Up** | *(Your Email)* | *(Your Password)* | Live 6-digit OTP verification via Gmail SMTP and personal dashboard |
-| **Municipal Admin Portal** | *Restricted* | *Private* | Strictly protected access reserved for platform administrators |
 
 > 💡 *New citizen registrations trigger live, automated 6-digit OTP delivery to the registered inbox via Gmail SMTP.*
 
@@ -209,7 +209,7 @@ cd backend
 mvn clean test
 mvn spring-boot:run
 ```
-*A demo citizen account (`citizen@civicpulse.com` / `citizen123`) is seeded automatically on initial boot. Administrator access is restricted.*
+*The administrator account (`admin@civicpulse.com` / `admin123`) and demo citizen account (`citizen@civicpulse.com` / `citizen123`) are seeded automatically on initial boot.*
 
 ### 3. Frontend Setup
 ```bash
