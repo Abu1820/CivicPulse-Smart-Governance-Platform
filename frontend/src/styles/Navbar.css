@@ -347,10 +347,17 @@
 
     .theme-toggle-btn {
         width: 100%;
+        min-width: 100%;
+        max-width: 100%;
         min-height: 44px; /* Touch friendly */
         justify-content: center;
         font-size: 14px;
         border-radius: 10px;
+        gap: 8px;
+    }
+
+    .theme-text {
+        width: auto;
     }
 
     .logout-btn {
