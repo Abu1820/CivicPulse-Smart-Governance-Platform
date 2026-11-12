@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import api from "../api/axiosConfig";
+import api, { getImageUrl } from "../api/axiosConfig";
 import ConfirmModal from "../components/ConfirmModal";
 import "../styles/ViewIssues.css";
 
@@ -18,6 +18,9 @@ function ViewIssues() {
         date: ""
     });
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 9;
+
     const [editingIssue, setEditingIssue] = useState(null);
     const [formData, setFormData] = useState({
         title: "",
@@ -30,6 +33,21 @@ function ViewIssues() {
         isOpen: false,
         issueId: null
     });
+
+    const hasActiveFilters = Boolean(
+        filters.search || filters.status || filters.category || filters.location || filters.date
+    );
+
+    const clearFilters = () => {
+        setFilters({
+            search: "",
+            status: "",
+            category: "",
+            location: "",
+            date: ""
+        });
+        setCurrentPage(1);
+    };
 
     // Fetch All Issues
     const fetchIssues = async (currentFilters = filters) => {
@@ -122,6 +140,7 @@ function ViewIssues() {
             ...prevFilters,
             [name]: value
         }));
+        setCurrentPage(1);
     };
 
     // Update Issue
@@ -193,102 +212,166 @@ function ViewIssues() {
                     value={filters.date}
                     onChange={handleFilterChange}
                 />
+
+                {hasActiveFilters && (
+                    <button
+                        type="button"
+                        className="clear-filters-btn"
+                        onClick={clearFilters}
+                        title="Clear all filters"
+                    >
+                        ✕ Clear Filters
+                    </button>
+                )}
             </div>
 
             {issues.length === 0 ? (
-                <p className="no-issues">No Issues Found</p>
-            ) : (
-                <div className="issues-grid">
-                    {issues.map((issue) => (
-                        <div className="issue-card" key={issue.id}>
-                            <h3>{issue.title}</h3>
-
-                            <p><strong>Description:</strong> {issue.description}</p>
-                            <p><strong>Location:</strong> {issue.location}</p>
-                            <p><strong>Category:</strong> {issue.category}</p>
-
-                            <p>
-                                <strong>Status:</strong>{" "}
-                                {issue.status === "Resolved" ? (
-                                    <span className="status resolved-badge">Resolved ✓</span>
-                                ) : issue.status === "In Progress" ? (
-                                    <span className="status progress-badge">In Progress</span>
-                                ) : (
-                                    <span className="status pending-badge">Pending</span>
-                                )}
-                            </p>
-
-                            <p>
-                                <strong>Reported:</strong>{" "}
-                                {issue.createdDate
-                                    ? new Date(issue.createdDate).toLocaleString()
-                                    : "N/A"}
-                            </p>
-
-                            {issue.updatedDate && (
-                                <p>
-                                    <strong>Updated:</strong>{" "}
-                                    {new Date(issue.updatedDate).toLocaleString()}
-                                </p>
-                            )}
-
-                            <div className="issue-image-wrapper">
-                                {issue.imagePath ? (
-                                    <img
-                                        src={`http://localhost:8080${issue.imagePath}`}
-                                        alt={issue.title}
-                                        className="issue-image"
-                                        onError={(e) => {
-                                            e.currentTarget.style.display = "none";
-                                        }}
-                                    />
-                                ) : (
-                                    <div className="issue-image-placeholder">
-                                        No image available
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="button-group">
-                                <button
-                                    className="details-btn"
-                                    onClick={() => navigate(`/issues/${issue.id}`)}
-                                >
-                                    View Details
-                                </button>
-
-                                {user?.role === "ADMIN" && (
-                                    <>
-                                        <button
-                                            className="edit-btn"
-                                            onClick={() => openEditForm(issue)}
-                                        >
-                                            Edit
-                                        </button>
-
-                                        {issue.status !== "Resolved" && (
-                                            <button
-                                                className="update-btn"
-                                                onClick={() =>
-                                                    updateStatus(issue.id, issue.status)
-                                                }
-                                            >
-                                                Update Status
-                                            </button>
-                                        )}
-
-                                        <button
-                                            className="delete-btn"
-                                            onClick={() => requestDelete(issue.id)}
-                                        >
-                                            Delete
-                                        </button>
-                                    </>
-                                )}
-                            </div>
-                        </div>
-                    ))}
+                <div className="empty-state-box">
+                    <div className="empty-state-icon">📋</div>
+                    <h3>No Issues Found</h3>
+                    <p>
+                        {hasActiveFilters
+                            ? "No civic issues match your current filter criteria."
+                            : "No civic issues have been reported yet."}
+                    </p>
+                    {hasActiveFilters ? (
+                        <button className="empty-action-btn" onClick={clearFilters}>
+                            Reset All Filters
+                        </button>
+                    ) : (
+                        user?.role !== "ADMIN" && (
+                            <Link to="/report" className="empty-action-btn">
+                                + Report a Civic Issue
+                            </Link>
+                        )
+                    )}
                 </div>
+            ) : (
+                <>
+                    <div className="issues-grid">
+                        {issues
+                            .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+                            .map((issue) => (
+                                <div className="issue-card" key={issue.id}>
+                                    <h3>{issue.title}</h3>
+
+                                    <p><strong>Description:</strong> {issue.description}</p>
+                                    <p><strong>Location:</strong> {issue.location}</p>
+                                    <p><strong>Category:</strong> {issue.category}</p>
+
+                                    <p>
+                                        <strong>Status:</strong>{" "}
+                                        {issue.status === "Resolved" ? (
+                                            <span className="status resolved-badge">Resolved ✓</span>
+                                        ) : issue.status === "In Progress" ? (
+                                            <span className="status progress-badge">In Progress</span>
+                                        ) : (
+                                            <span className="status pending-badge">Pending</span>
+                                        )}
+                                    </p>
+
+                                    <p>
+                                        <strong>Reported:</strong>{" "}
+                                        {issue.createdDate
+                                            ? new Date(issue.createdDate).toLocaleString()
+                                            : "N/A"}
+                                    </p>
+
+                                    {issue.updatedDate && (
+                                        <p>
+                                            <strong>Updated:</strong>{" "}
+                                            {new Date(issue.updatedDate).toLocaleString()}
+                                        </p>
+                                    )}
+
+                                    <div className="issue-image-wrapper">
+                                        {issue.imagePath ? (
+                                            <img
+                                                src={getImageUrl(issue.imagePath)}
+                                                alt={issue.title}
+                                                className="issue-image"
+                                                onError={(e) => {
+                                                    e.currentTarget.style.display = "none";
+                                                }}
+                                            />
+                                        ) : (
+                                            <div className="issue-image-placeholder">
+                                                No image available
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="button-group">
+                                        <button
+                                            className="details-btn"
+                                            onClick={() => navigate(`/issues/${issue.id}`)}
+                                        >
+                                            View Details
+                                        </button>
+
+                                        {user?.role === "ADMIN" && (
+                                            <>
+                                                <button
+                                                    className="edit-btn"
+                                                    onClick={() => openEditForm(issue)}
+                                                >
+                                                    Edit
+                                                </button>
+
+                                                {issue.status !== "Resolved" && (
+                                                    <button
+                                                        className="update-btn"
+                                                        onClick={() =>
+                                                            updateStatus(issue.id, issue.status)
+                                                        }
+                                                    >
+                                                        Update Status
+                                                    </button>
+                                                )}
+
+                                                <button
+                                                    className="delete-btn"
+                                                    onClick={() => requestDelete(issue.id)}
+                                                >
+                                                    Delete
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                    </div>
+
+                    {Math.ceil(issues.length / itemsPerPage) > 1 && (
+                        <div className="pagination-wrapper">
+                            <button
+                                className="page-btn prev-btn"
+                                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                                disabled={currentPage === 1}
+                                aria-label="Previous page"
+                            >
+                                ← Prev
+                            </button>
+
+                            <span className="page-indicator">
+                                Page <strong>{currentPage}</strong> of <strong>{Math.ceil(issues.length / itemsPerPage)}</strong> ({issues.length} total)
+                            </span>
+
+                            <button
+                                className="page-btn next-btn"
+                                onClick={() =>
+                                    setCurrentPage((p) =>
+                                        Math.min(p + 1, Math.ceil(issues.length / itemsPerPage))
+                                    )
+                                }
+                                disabled={currentPage === Math.ceil(issues.length / itemsPerPage)}
+                                aria-label="Next page"
+                            >
+                                Next →
+                            </button>
+                        </div>
+                    )}
+                </>
             )}
 
             {editingIssue && (

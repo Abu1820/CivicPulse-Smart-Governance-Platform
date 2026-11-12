@@ -42,6 +42,11 @@ public class RateLimitingFilter extends OncePerRequestFilter {
             return;
         }
 
+        // Prevent unbounded memory growth under high sustained traffic
+        if (ipBuckets.size() > 5000) {
+            ipBuckets.clear();
+        }
+
         String ip = getClientIp(request);
         Bucket bucket = ipBuckets.computeIfAbsent(ip, k -> createNewBucket());
 

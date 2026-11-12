@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import api from "../api/axiosConfig";
+import api, { getImageUrl } from "../api/axiosConfig";
 import IssueLocationMap from "../components/IssueLocationMap";
 import "../styles/IssueDetails.css";
 
@@ -101,7 +101,7 @@ function IssueDetails() {
                 <div className="detail-image-wrapper">
                     {issue.imagePath ? (
                         <img
-                            src={`http://localhost:8080${issue.imagePath}`}
+                            src={getImageUrl(issue.imagePath)}
                             alt={issue.title}
                             className="detail-image"
                             onError={(e) => {

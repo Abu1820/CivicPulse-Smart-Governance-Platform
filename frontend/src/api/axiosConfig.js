@@ -1,8 +1,19 @@
 import axios from "axios";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL 
-    ? `${import.meta.env.VITE_API_BASE_URL.replace(/\/$/, "")}/api`
-    : "http://localhost:8080/api";
+export const SERVER_BASE = import.meta.env.VITE_API_BASE_URL 
+    ? import.meta.env.VITE_API_BASE_URL.replace(/\/$/, "")
+    : "http://localhost:8080";
+
+const API_BASE = `${SERVER_BASE}/api`;
+
+export function getImageUrl(imagePath) {
+    if (!imagePath) return "";
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+        return imagePath;
+    }
+    const cleanPath = imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
+    return `${SERVER_BASE}${cleanPath}`;
+}
 
 const api = axios.create({
     baseURL: API_BASE,

@@ -40,6 +40,13 @@ body {
   min-height: calc(100vh - 72px);
 }
 
+@media (max-width: 767px) {
+  .main-content-wrapper {
+    padding-top: 64px;
+    min-height: calc(100vh - 64px);
+  }
+}
+
 /* ─── Global Dark Mode Component Overrides ─────────────────── */
 [data-theme="dark"] .issue-card,
 [data-theme="dark"] .details-card,

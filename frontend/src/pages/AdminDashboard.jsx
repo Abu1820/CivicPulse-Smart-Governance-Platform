@@ -191,54 +191,56 @@ function AdminDashboard() {
             {/* Recent Issues Table */}
             <div className="recent-issues">
                 <h2>Recent Issues</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Category</th>
-                            <th>Location</th>
-                            <th>Status</th>
-                            <th>Reported</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {issues.length === 0 ? (
+                <div className="table-responsive-wrapper">
+                    <table>
+                        <thead>
                             <tr>
-                                <td colSpan="5">No Issues Found</td>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                                <th>Reported</th>
                             </tr>
-                        ) : (
-                            issues.map((issue) => (
-                                <tr
-                                    key={issue.id}
-                                    onClick={() => navigate(`/issues/${issue.id}`)}
-                                    style={{ cursor: "pointer" }}
-                                >
-                                    <td>{issue.title}</td>
-                                    <td>{issue.category}</td>
-                                    <td>{issue.location}</td>
-                                    <td>
-                                        <span
-                                            className={
-                                                issue.status === "Pending"
-                                                    ? "status pending-badge"
-                                                    : issue.status === "In Progress"
-                                                    ? "status progress-badge"
-                                                    : "status resolved-badge"
-                                            }
-                                        >
-                                            {issue.status}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        {issue.createdDate
-                                            ? new Date(issue.createdDate).toLocaleDateString()
-                                            : "N/A"}
-                                    </td>
+                        </thead>
+                        <tbody>
+                            {issues.length === 0 ? (
+                                <tr>
+                                    <td colSpan="5">No Issues Found</td>
                                 </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
+                            ) : (
+                                issues.map((issue) => (
+                                    <tr
+                                        key={issue.id}
+                                        onClick={() => navigate(`/issues/${issue.id}`)}
+                                        style={{ cursor: "pointer" }}
+                                    >
+                                        <td>{issue.title}</td>
+                                        <td>{issue.category}</td>
+                                        <td>{issue.location}</td>
+                                        <td>
+                                            <span
+                                                className={
+                                                    issue.status === "Pending"
+                                                        ? "status pending-badge"
+                                                        : issue.status === "In Progress"
+                                                        ? "status progress-badge"
+                                                        : "status resolved-badge"
+                                                }
+                                            >
+                                                {issue.status}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {issue.createdDate
+                                                ? new Date(issue.createdDate).toLocaleDateString()
+                                                : "N/A"}
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );

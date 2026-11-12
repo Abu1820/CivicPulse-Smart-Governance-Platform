@@ -94,8 +94,17 @@
     margin-bottom:25px;
 }
 
+.table-responsive-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
 table{
     width:100%;
+    min-width: 600px;
     border-collapse:collapse;
     background:white;
     border-radius:10px;

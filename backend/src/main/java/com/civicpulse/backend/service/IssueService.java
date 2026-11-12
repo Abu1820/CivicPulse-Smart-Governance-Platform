@@ -123,6 +123,10 @@ public class IssueService {
                         normalizedCategory,
                         normalizedLocation,
                         filterDate))
+                .sorted((a, b) -> {
+                    if (a.getCreatedDate() == null || b.getCreatedDate() == null) return 0;
+                    return b.getCreatedDate().compareTo(a.getCreatedDate());
+                })
                 .toList();
     }
 
