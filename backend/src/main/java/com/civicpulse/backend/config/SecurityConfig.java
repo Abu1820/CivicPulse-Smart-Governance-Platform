@@ -57,6 +57,11 @@ public class SecurityConfig {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             response.getWriter().write("{\"message\":\"Unauthorized\"}");
                         })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setContentType("application/json");
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.getWriter().write("{\"message\":\"Forbidden: Insufficient privileges\"}");
+                        })
                 )
 
                 .authorizeHttpRequests(auth -> auth
