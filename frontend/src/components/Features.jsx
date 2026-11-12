@@ -1,54 +1,34 @@
 import "../styles/Features.css";
 
 function Features() {
+  return (
+    <section className="features">
+      <div className="features-header">
+        <h2>Why Choose CivicPulse?</h2>
+        <div className="features-accent-line"></div>
+      </div>
 
-    return (
+      <div className="feature-container">
+        <div className="feature-card">
+          <div className="feature-icon-bubble">📝</div>
+          <h3>Report Issue</h3>
+          <p>Report potholes, garbage, water leakage and more with real-time GPS coordinates.</p>
+        </div>
 
-        <section className="features">
+        <div className="feature-card">
+          <div className="feature-icon-bubble">📍</div>
+          <h3>Track Issues</h3>
+          <p>Monitor the live status and resolution progress of your reported issues.</p>
+        </div>
 
-            <h2>Why Choose CivicPulse?</h2>
-
-            <div className="feature-container">
-
-                <div className="feature-card">
-
-                    <h3>📝 Report Issue</h3>
-
-                    <p>
-                        Report potholes, garbage,
-                        water leakage and more.
-                    </p>
-
-                </div>
-
-                <div className="feature-card">
-
-                    <h3>📍 Track Issues</h3>
-
-                    <p>
-                        Monitor the status of your
-                        reported issues.
-                    </p>
-
-                </div>
-
-                <div className="feature-card">
-
-                    <h3>📊 Dashboard</h3>
-
-                    <p>
-                        View live statistics
-                        of civic issues.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
-
-    );
-
+        <div className="feature-card">
+          <div className="feature-icon-bubble">📊</div>
+          <h3>Dashboard</h3>
+          <p>View interactive analytics and live statistics on civic issue resolution.</p>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 export default Features;

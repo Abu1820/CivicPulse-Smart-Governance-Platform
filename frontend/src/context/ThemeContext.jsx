@@ -6,9 +6,7 @@ export function ThemeProvider({ children }) {
     const [theme, setTheme] = useState(() => {
         const savedTheme = localStorage.getItem("civicpulse_theme");
         if (savedTheme) return savedTheme;
-        return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
-            ? "dark"
-            : "light";
+        return "dark";
     });
 
     useEffect(() => {

@@ -31,8 +31,8 @@ body {
 }
 
 .main-content-wrapper {
-  padding-top: 76px;
-  min-height: calc(100vh - 76px);
+  padding-top: 72px;
+  min-height: calc(100vh - 72px);
 }
 
 /* ─── Global Dark Mode Component Overrides ─────────────────── */
