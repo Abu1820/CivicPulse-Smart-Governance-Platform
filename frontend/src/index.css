@@ -17,6 +17,10 @@
   --card-border: #334155;
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 * {
   margin: 0;
   padding: 0;
