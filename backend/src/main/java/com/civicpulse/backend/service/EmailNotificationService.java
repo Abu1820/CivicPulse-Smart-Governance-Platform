@@ -43,24 +43,24 @@ public class EmailNotificationService {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.name());
 
-            helper.setFrom(fromEmail, "CivicPulse Smart Governance");
+            helper.setFrom(fromEmail, "CivicPulse - Smart Governance Platform");
             helper.setTo(toEmail);
-            helper.setSubject("CivicPulse — Verify Your Email Address (" + code + ")");
+            helper.setSubject("CivicPulse - Smart Governance Platform — Verify Your Email Address (" + code + ")");
 
             String htmlBody = buildVerificationHtml(userName, code);
             String plainText = String.format(
                     """
                     Hello %s,
 
-                    Welcome to CivicPulse!
+                    Welcome to CivicPulse - Smart Governance Platform!
 
                     Your 6-digit email verification code is: %s
 
                     This code expires in 15 minutes. Please enter it in the app to activate your account.
 
-                    If you did not sign up for CivicPulse, please ignore this email.
+                    If you did not sign up for CivicPulse - Smart Governance Platform, please ignore this email.
 
-                    — CivicPulse Smart Governance Team
+                    — CivicPulse - Smart Governance Platform Team
                     """,
                     userName, code
             );
@@ -86,9 +86,9 @@ public class EmailNotificationService {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.name());
 
-            helper.setFrom(fromEmail, "CivicPulse Smart Governance");
+            helper.setFrom(fromEmail, "CivicPulse - Smart Governance Platform");
             helper.setTo(toEmail);
-            helper.setSubject("CivicPulse — Issue Status Updated: " + issueTitle);
+            helper.setSubject("CivicPulse - Smart Governance Platform — Issue Status Updated: " + issueTitle);
 
             String htmlBody = buildStatusUpdateHtml(userName, issueTitle, oldStatus, newStatus);
             String plainText = String.format(
@@ -145,7 +145,7 @@ public class EmailNotificationService {
                     </div>
                     <div class="content">
                       <p style="font-size: 16px; margin-top: 0;">Hello <strong>%s</strong>,</p>
-                      <p>Thank you for joining CivicPulse. Please enter the following 6-digit verification code to complete your registration and activate your account:</p>
+                      <p>Thank you for joining CivicPulse - Smart Governance Platform. Please enter the following 6-digit verification code to complete your registration and activate your account:</p>
                       <div class="otp-box">
                         <div class="otp-code">%s</div>
                         <div class="timer-note">⏱ Valid for <strong>15 minutes</strong></div>
@@ -153,7 +153,7 @@ public class EmailNotificationService {
                       <p style="font-size: 13px; color: #64748b;">If you did not request this verification code, please disregard this email.</p>
                     </div>
                     <div class="footer">
-                      &copy; CivicPulse Smart Governance Platform
+                      &copy; CivicPulse - Smart Governance Platform
                     </div>
                   </div>
                 </body>
@@ -198,7 +198,7 @@ public class EmailNotificationService {
                       <p>Thank you for contributing to your community!</p>
                     </div>
                     <div class="footer">
-                      &copy; CivicPulse Smart Governance Platform
+                      &copy; CivicPulse - Smart Governance Platform
                     </div>
                   </div>
                 </body>

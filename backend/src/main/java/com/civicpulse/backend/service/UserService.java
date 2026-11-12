@@ -109,7 +109,7 @@ public class UserService {
 
         String token = jwtService.generateToken(user.getEmail());
         AuthResponse res = new AuthResponse(
-                "Email verified successfully! Welcome to CivicPulse.",
+                "Email verified successfully! Welcome to CivicPulse - Smart Governance Platform.",
                 true,
                 user.getName(),
                 user.getEmail(),

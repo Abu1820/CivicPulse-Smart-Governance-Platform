@@ -228,7 +228,7 @@ function Navbar() {
 
       <ConfirmModal
         isOpen={showLogoutModal}
-        message="Are you sure you want to log out of CivicPulse?"
+        message="Are you sure you want to log out of CivicPulse - Smart Governance Platform?"
         onConfirm={handleLogoutConfirm}
         onCancel={() => setShowLogoutModal(false)}
       />

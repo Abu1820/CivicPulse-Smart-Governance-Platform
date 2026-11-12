@@ -21,7 +21,7 @@ function Home() {
         <div className="hero-logo-badge">
           <Logo size="lg" showText={false} />
         </div>
-        <h1>Welcome to CivicPulse</h1>
+        <h1>CivicPulse - Smart Governance Platform</h1>
 
         <p>
           {isAdmin

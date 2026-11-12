@@ -9,6 +9,8 @@
 
 .report-card {
     width: 540px;
+    max-width: 100%;
+    box-sizing: border-box;
     background: #ffffff;
     padding: 36px;
     border-radius: 14px;

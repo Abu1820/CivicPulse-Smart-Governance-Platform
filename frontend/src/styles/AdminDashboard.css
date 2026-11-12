@@ -183,9 +183,9 @@ tr:hover{
 }
 
 .filter-container input{
-
-    width:400px;
-
+    width: 400px;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .filter-container select{
@@ -221,7 +221,7 @@ tr:hover{
 /* ─── Charts Section ──────────────────────────────────────── */
 .charts-section {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 25px;
     margin: 35px 0;
 }

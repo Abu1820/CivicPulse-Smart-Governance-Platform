@@ -202,3 +202,19 @@
 .profile-actions button.secondary:hover {
     background: #e2e8f0;
 }
+
+@media (max-width: 640px) {
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 24px 16px;
+    }
+
+    .profile-actions {
+        flex-direction: column;
+    }
+
+    .profile-actions button {
+        width: 100%;
+    }
+}

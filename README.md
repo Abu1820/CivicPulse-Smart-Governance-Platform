@@ -1,4 +1,4 @@
-# 🏙️ CivicPulse — Smart Civic Governance & Issue Management Platform
+# 🏙️ CivicPulse - Smart Governance Platform
 
 <div align="center">
 
