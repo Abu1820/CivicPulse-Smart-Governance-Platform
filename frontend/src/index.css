@@ -227,3 +227,29 @@ body {
   height: 3px !important;
   background: rgba(255, 255, 255, 0.7) !important;
 }
+
+/* ─── Page Loading Fallback Spinner ────────────────────────── */
+.page-loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  gap: 16px;
+  color: var(--primary-color);
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.spinner-ring {
+  width: 44px;
+  height: 44px;
+  border: 3.5px solid rgba(20, 184, 166, 0.2);
+  border-top-color: #14b8a6;
+  border-radius: 50%;
+  animation: pageSpin 0.75s linear infinite;
+}
+
+@keyframes pageSpin {
+  to { transform: rotate(360deg); }
+}

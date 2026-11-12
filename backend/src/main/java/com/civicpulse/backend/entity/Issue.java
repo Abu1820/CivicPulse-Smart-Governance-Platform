@@ -7,7 +7,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "issues")
+@Table(
+	name = "issues",
+	indexes = {
+		@Index(name = "idx_issues_status", columnList = "status"),
+		@Index(name = "idx_issues_category", columnList = "category"),
+		@Index(name = "idx_issues_user_id", columnList = "user_id"),
+		@Index(name = "idx_issues_created_date", columnList = "createdDate")
+	}
+)
 public class Issue {
 
 	@Id

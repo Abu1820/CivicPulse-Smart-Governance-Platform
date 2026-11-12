@@ -1,18 +1,28 @@
+import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import ReportIssue from "./pages/ReportIssue";
-import ViewIssues from "./pages/ViewIssues";
-import IssueDetails from "./pages/IssueDetails";
-import AdminDashboard from "./pages/AdminDashboard";
-import UserProfile from "./pages/UserProfile";
-import NotFound from "./pages/NotFound";
+const Home = lazy(() => import("./pages/Home"));
+const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register"));
+const ReportIssue = lazy(() => import("./pages/ReportIssue"));
+const ViewIssues = lazy(() => import("./pages/ViewIssues"));
+const IssueDetails = lazy(() => import("./pages/IssueDetails"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const UserProfile = lazy(() => import("./pages/UserProfile"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+
+function PageLoader() {
+    return (
+        <div className="page-loading-spinner" role="status" aria-label="Loading page">
+            <div className="spinner-ring" />
+            <span>Loading...</span>
+        </div>
+    );
+}
 
 function App() {
     return (
@@ -20,58 +30,60 @@ function App() {
             <Navbar />
 
             <main className="main-content-wrapper">
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
+                <Suspense fallback={<PageLoader />}>
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
 
-                    <Route
-                        path="/report"
-                        element={
-                            <ProtectedRoute>
-                                <ReportIssue />
-                            </ProtectedRoute>
-                        }
-                    />
+                        <Route
+                            path="/report"
+                            element={
+                                <ProtectedRoute>
+                                    <ReportIssue />
+                                </ProtectedRoute>
+                            }
+                        />
 
-                    <Route
-                        path="/issues"
-                        element={
-                            <ProtectedRoute>
-                                <ViewIssues />
-                            </ProtectedRoute>
-                        }
-                    />
+                        <Route
+                            path="/issues"
+                            element={
+                                <ProtectedRoute>
+                                    <ViewIssues />
+                                </ProtectedRoute>
+                            }
+                        />
 
-                    <Route
-                        path="/issues/:id"
-                        element={
-                            <ProtectedRoute>
-                                <IssueDetails />
-                            </ProtectedRoute>
-                        }
-                    />
+                        <Route
+                            path="/issues/:id"
+                            element={
+                                <ProtectedRoute>
+                                    <IssueDetails />
+                                </ProtectedRoute>
+                            }
+                        />
 
-                    <Route
-                        path="/admin-dashboard"
-                        element={
-                            <ProtectedRoute role="ADMIN">
-                                <AdminDashboard />
-                            </ProtectedRoute>
-                        }
-                    />
+                        <Route
+                            path="/admin-dashboard"
+                            element={
+                                <ProtectedRoute role="ADMIN">
+                                    <AdminDashboard />
+                                </ProtectedRoute>
+                            }
+                        />
 
-                    <Route
-                        path="/profile"
-                        element={
-                            <ProtectedRoute>
-                                <UserProfile />
-                            </ProtectedRoute>
-                        }
-                    />
+                        <Route
+                            path="/profile"
+                            element={
+                                <ProtectedRoute>
+                                    <UserProfile />
+                                </ProtectedRoute>
+                            }
+                        />
 
-                    <Route path="*" element={<NotFound />} />
-                </Routes>
+                        <Route path="*" element={<NotFound />} />
+                    </Routes>
+                </Suspense>
             </main>
 
             <ToastContainer

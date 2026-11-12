@@ -206,10 +206,12 @@ public class IssueService {
         long resolved = issueRepository.countByStatus("Resolved");
 
         Map<String, Long> categoryStats = new LinkedHashMap<>();
-        issueRepository.findAll().forEach(issue -> {
-            String cat = issue.getCategory() != null ? issue.getCategory() : "Other";
-            categoryStats.put(cat, categoryStats.getOrDefault(cat, 0L) + 1);
-        });
+        List<Object[]> results = issueRepository.countGroupByCategory();
+        for (Object[] row : results) {
+            String cat = row[0] != null ? row[0].toString() : "Other";
+            Long count = ((Number) row[1]).longValue();
+            categoryStats.put(cat, count);
+        }
 
         return new DashboardStats(
                 total,
