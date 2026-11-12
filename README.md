@@ -19,6 +19,7 @@
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-00758F.svg?style=flat-square&logo=mysql&logoColor=white)](https://www.mysql.com/)
 [![Leaflet](https://img.shields.io/badge/Leaflet-GPS%20Maps-199900.svg?style=flat-square&logo=leaflet&logoColor=white)](https://leafletjs.com/)
 [![Bucket4j](https://img.shields.io/badge/Bucket4j-Rate%20Limiting-red.svg?style=flat-square)](https://github.com/bucket4j/bucket4j)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
 [![Tests Passing](https://img.shields.io/badge/Tests-15%2F15%20Passing-success.svg?style=flat-square)]()
 
 <br/>
@@ -251,4 +252,4 @@ CivicPulse is pre-configured with a **Render Blueprint** ([`render.yaml`](render
 ---
 
 ## 📄 License
-This project is open-source and distributed under the [ISC License](LICENSE).
+This project is open-source and distributed under the [MIT License](LICENSE).
