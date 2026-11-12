@@ -3,6 +3,7 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../api/axiosConfig";
 import { getErrorMessage } from "../utils/errorHandler";
+import Logo from "../components/Logo";
 import "../styles/Login.css";
 
 function Login() {
@@ -175,6 +176,9 @@ function Login() {
   return (
     <div className="login-container">
       <div className="login-card">
+        <div className="auth-logo-wrap">
+          <Logo size="md" />
+        </div>
         {!showOtpStep ? (
           <>
             <h2>Login</h2>

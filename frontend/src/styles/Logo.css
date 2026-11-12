@@ -1,0 +1,143 @@
+/* ─── CivicPulse Brand Logo Styles ────────────────────────── */
+.civicpulse-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    user-select: none;
+    line-height: 1;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.civicpulse-brand:hover {
+    transform: translateY(-1px);
+}
+
+/* Icon Container */
+.brand-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: 12px;
+    filter: drop-shadow(0 4px 10px rgba(13, 148, 136, 0.3));
+    transition: filter 0.25s ease, transform 0.25s ease;
+}
+
+.civicpulse-brand:hover .brand-icon-wrapper {
+    filter: drop-shadow(0 6px 14px rgba(45, 212, 191, 0.5));
+    transform: scale(1.04);
+}
+
+.brand-icon-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Pulse Ripple Animation */
+@keyframes pulseGlow {
+    0%, 100% {
+        opacity: 0.85;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.4;
+        transform: scale(1.2);
+    }
+}
+
+.pulse-ripple {
+    transform-origin: 32px 15px;
+    animation: pulseGlow 2.5s ease-in-out infinite;
+}
+
+/* Text Block */
+.brand-text-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Title: CivicPulse */
+.brand-title {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    display: flex;
+    align-items: center;
+    line-height: 1.1;
+}
+
+.brand-civic {
+    color: #FFFFFF;
+    transition: color 0.2s ease;
+}
+
+/* Light Theme Contrast */
+[data-theme="light"] .brand-civic {
+    color: #0F172A;
+}
+
+/* When inside navbar in light theme or dark theme */
+.navbar .brand-civic {
+    color: #FFFFFF;
+}
+
+.brand-pulse {
+    background: linear-gradient(135deg, #14B8A6 0%, #2DD4BF 50%, #38BDF8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    padding-left: 1px;
+}
+
+/* Tagline: SMART GOVERNANCE */
+.brand-tagline {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: #94A3B8;
+    margin-top: 3px;
+    text-transform: uppercase;
+}
+
+.tagline-dot {
+    color: #2DD4BF;
+    font-size: 11px;
+    display: inline-block;
+}
+
+/* Size Variants */
+.civicpulse-brand.sm {
+    gap: 8px;
+}
+
+.civicpulse-brand.sm .brand-title {
+    font-size: 18px;
+}
+
+.civicpulse-brand.md .brand-title {
+    font-size: 24px;
+}
+
+.civicpulse-brand.lg {
+    gap: 16px;
+}
+
+.civicpulse-brand.lg .brand-title {
+    font-size: 32px;
+}
+
+.civicpulse-brand.lg .brand-tagline {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    margin-top: 4px;
+}
+
+/* Auth Card Centering */
+.auth-logo-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}

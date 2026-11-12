@@ -60,3 +60,18 @@
         padding: 14px 24px;
     }
 }
+
+/* Hero Logo Badge */
+.hero-logo-badge {
+    margin-bottom: 20px;
+    animation: floatLogo 4s ease-in-out infinite;
+}
+
+@keyframes floatLogo {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-6px);
+    }
+}

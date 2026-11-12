@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../api/axiosConfig";
 import { getErrorMessage } from "../utils/errorHandler";
+import Logo from "../components/Logo";
 import "../styles/Register.css";
 
 function Register() {
@@ -178,6 +179,9 @@ function Register() {
   return (
     <div className="register-container">
       <div className="register-card">
+        <div className="auth-logo-wrap">
+          <Logo size="md" />
+        </div>
         {!isVerifying ? (
           <>
             <h2>Create Account</h2>

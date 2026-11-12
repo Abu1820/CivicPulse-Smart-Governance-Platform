@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useTheme } from "../context/ThemeContext";
 import ConfirmModal from "./ConfirmModal";
+import Logo from "./Logo";
 import "../styles/Navbar.css";
 
 function Navbar() {
@@ -74,8 +75,8 @@ function Navbar() {
   return (
     <>
       <nav className="navbar">
-        <Link to="/" className="nav-logo" onClick={closeMenu} title="CivicPulse - Home">
-          <h2>CivicPulse</h2>
+        <Link to="/" className="nav-logo" onClick={closeMenu} title="CivicPulse - Smart Governance Platform">
+          <Logo size="md" showText={true} showTagline={true} />
         </Link>
 
         {/* Mobile Hamburger Button */}

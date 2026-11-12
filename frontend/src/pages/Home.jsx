@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import "../styles/Home.css";
 import Features from "../components/Features";
 import Footer from "../components/Footer";
+import Logo from "../components/Logo";
 
 function Home() {
   const storedUser = localStorage.getItem("user");
@@ -17,6 +18,9 @@ function Home() {
   return (
     <>
       <section className="hero">
+        <div className="hero-logo-badge">
+          <Logo size="lg" showText={false} />
+        </div>
         <h1>Welcome to CivicPulse</h1>
 
         <p>

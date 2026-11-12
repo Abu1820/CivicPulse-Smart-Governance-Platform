@@ -2,6 +2,9 @@
 
 <div align="center">
 
+<img src="frontend/public/logo.svg" alt="CivicPulse Logo" width="300" />
+<br/><br/>
+
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Online%20App-0d9488?style=for-the-badge&logo=vercel&logoColor=white)](https://civic-pulse-smart-governance-platfo.vercel.app/)
 [![Deploy to Render](https://img.shields.io/badge/Deploy%20to-Render-46E3B7?style=for-the-badge&logo=render&logoColor=black)](https://render.com/deploy)
 [![Docker Ready](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](#-quick-start-with-docker)
