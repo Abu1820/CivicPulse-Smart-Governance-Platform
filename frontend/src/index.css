@@ -48,6 +48,13 @@ body {
 }
 
 /* ─── Global Dark Mode Component Overrides ─────────────────── */
+[data-theme="dark"] .dashboard-container,
+[data-theme="dark"] .report-container,
+[data-theme="dark"] .issues-container,
+[data-theme="dark"] .details-container {
+  background: linear-gradient(135deg, #070b12 0%, #0b1120 45%, #0d3d3a 100%) !important;
+}
+
 [data-theme="dark"] .issue-card,
 [data-theme="dark"] .details-card,
 [data-theme="dark"] .report-card,

@@ -130,7 +130,12 @@ tr:hover{
 @media(max-width:768px){
 
     .dashboard-container{
-        padding:90px 20px;
+        padding:90px 20px 40px;
+    }
+
+    .dashboard-container h2{
+        font-size: 28px;
+        margin-bottom: 24px;
     }
 
     .dashboard-grid{
@@ -181,14 +186,20 @@ tr:hover{
 
 .filter-container input,
 .filter-container select{
+    padding: 12px 16px;
+    border: 1px solid #CBD5E1;
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
 
-    padding:15px;
-    border:none;
-    border-radius:8px;
-    font-size:16px;
-    outline:none;
-    box-shadow:0 4px 10px rgba(0,0,0,.2);
-
+.filter-container input:focus,
+.filter-container select:focus {
+    border-color: #14B8A6;
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
 }
 
 .filter-container input{
@@ -198,10 +209,8 @@ tr:hover{
 }
 
 .filter-container select{
-
-    min-width:180px;
-    cursor:pointer;
-
+    min-width: 180px;
+    cursor: pointer;
 }
 /* Status Badges */
 
