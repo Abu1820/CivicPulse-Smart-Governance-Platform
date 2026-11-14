@@ -9,7 +9,7 @@ services:
     dockerContext: backend
     plan: free
     region: oregon
-    healthCheckPath: /api/issues
+    healthCheckPath: /api/auth/health
     envVars:
       - key: SPRING_DATASOURCE_URL
         fromDatabase:

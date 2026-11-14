@@ -22,6 +22,11 @@ public class AuthController {
         this.userService = userService;
     }
 
+    @GetMapping("/health")
+    public ResponseEntity<java.util.Map<String, String>> health() {
+        return ResponseEntity.ok(java.util.Map.of("status", "UP"));
+    }
+
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.ok(userService.register(request));
